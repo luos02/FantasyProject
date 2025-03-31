@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block title %}Plataforma{% endblock %}
+
+{% block content %}
+                <!-- Main Content -->
+                <div class="main-content">
+    
+                    <!-- Vista Previa de Datos -->
+                    <div class="card">
+                        <h2><i class="fas fa-table"></i> Vista Previa de Datos</h2>
+                        <div class="data-preview">
+                            <table id="dataPreview">
+                                <thead>
+                                    <tr>
+                                        <th>Lorem</th>
+                                        <th>Lorem</th>
+                                        <th>Lorem</th>
+                                        <th>Lorem</th>
+                                        <th>Lorem</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+    
+                    <!-- Gráficos -->
+                    <div class="card">
+                        <h2><i class="fas fa-chart-bar"></i> Análisis Predictivo</h2>
+                        <div class="chart-container">
+                            <canvas id="performanceChart"></canvas>
+                        </div>
+                        <div class="mt-4 flex gap-4">
+                            <button class="button button-primary" onclick="updateAnalysis()">
+                                <i class="fas fa-sync-alt"></i> Actualizar Modelo
+                            </button>
+                            <button class="button button-primary" onclick="exportReport()">
+                                <i class="fas fa-download"></i> Exportar Reporte
+                            </button>
+                        </div>
+                    </div>
+    
+                    <!-- Estadísticas -->
+                    <div class="card grid grid-cols-3 gap-4">
+                        <div class="text-center">
+                            <h3><i class="fas fa-users"></i> Total</h3>
+                            <p class="text-3xl font-bold" id="totalStudents">0</p>
+                        </div>
+                        <div class="text-center">
+                            <h3><i class="fas fa-percentage"></i> Rendimiento Promedio</h3>
+                            <p class="text-3xl font-bold" id="avgPerformance">0%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <script>
+            // Datos de demostración
+            let studentData = [];
+            let performanceChart;
+    
+            // Inicializar datos ficticios
+            function generateMockData() {
+                studentData = [];
+                const subjects = ['Matemáticas', 'Literatura', 'Historia'];
+                
+                for (let i = 1; i <= 50; i++) {
+                    studentData.push({
+                        id: i,
+                        name: `Mes ${i}`,
+                        scores: {
+                            'Matemáticas': Math.floor(Math.random() * 20 + 60),
+                            'Literatura': Math.floor(Math.random() * 20 + 65),
+                            'Historia': Math.floor(Math.random() * 20 + 70)
+                        },
+                        prediction: Math.random() > 0.2 ? 'Buen rendimiento' : 'En riesgo'
+                    });
+                }
+                
+                updateDataPreview();
+                updateStats();
+                renderChart();
+            }
+    
+            // Actualizar vista de datos
+            function updateDataPreview() {
+                const tbody = document.querySelector('#dataPreview tbody');
+                tbody.innerHTML = '';
+                
+                studentData.slice(0, 10).forEach(student => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${student.name}</td>
+                            <td>${student.scores['Matemáticas']}%</td>
+                            <td>${student.scores['Literatura']}%</td>
+                            <td>${student.scores['Historia']}%</td>
+                            <td><span class="tag ${student.prediction === 'Buen rendimiento' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">${student.prediction}</span></td>
+                        </tr>
+                    `;
+                });
+            }
+    
+            // Actualizar estadísticas
+            function updateStats() {
+                document.getElementById('totalStudents').textContent = studentData.length;
+                
+                const avg = studentData.reduce((sum, student) => 
+                    sum + (student.scores['Matemáticas'] + student.scores['Literatura'] + student.scores['Historia']) / 3, 0) / studentData.length;
+                document.getElementById('avgPerformance').textContent = `${avg.toFixed(1)}%`;
+                
+                const risk = studentData.filter(s => s.prediction === 'Riesgo académico').length;
+                document.getElementById('riskStudents').textContent = risk;
+            }
+    
+            // Renderizar gráfico
+            function renderChart() {
+                if (performanceChart) performanceChart.destroy();
+                
+                const ctx = document.getElementById('performanceChart').getContext('2d');
+                performanceChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Matemáticas', 'Literatura', 'Historia'],
+                        datasets: [{
+                            label: 'Rendimiento Promedio',
+                            data: [
+                                studentData.reduce((sum, s) => sum + s.scores['Matemáticas'], 0) / studentData.length,
+                                studentData.reduce((sum, s) => sum + s.scores['Literatura'], 0) / studentData.length,
+                                studentData.reduce((sum, s) => sum + s.scores['Historia'], 0) / studentData.length
+                            ],
+                            backgroundColor: [
+                                'rgba(59, 130, 246, 0.8)',
+                                'rgba(239, 68, 68, 0.8)',
+                                'rgba(16, 185, 129, 0.8)'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Porcentaje de Aprobación'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+    
+            // Simular actualización de modelo
+            function updateAnalysis() {
+                studentData.forEach(student => {
+                    student.prediction = Math.random() > 0.25 ? 'Buen rendimiento' : 'Riesgo académico';
+                });
+                updateDataPreview();
+                updateStats();
+                alert('Modelo predictivo actualizado con éxito');
+            }
+    
+            // Simular exportación
+            function exportReport() {
+                alert('Descarga iniciada: reporte_predictivo.pdf');
+            }
+    
+            // Inicializar demo
+            generateMockData();
+    
+            // Manejar archivos CSV
+            document.getElementById('fileInput').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    document.getElementById('fileInfo').innerHTML = `
+                        <div class="p-2 bg-blue-50 rounded">
+                            <i class="fas fa-file-csv text-blue-600"></i> 
+                            ${file.name} (${(file.size/1024).toFixed(1)}KB)
+                        </div>
+                    `;
+                    // Aquí iría la lógica real de procesamiento CSV
+                    alert('Archivo cargado con éxito (simulación)');
+                }
+            });
+        </script>
+
+{% endblock %}

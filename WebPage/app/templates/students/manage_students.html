@@ -1,0 +1,44 @@
+<!-- templates/students/watch_student_list.html -->
+{% extends "base.html" %}
+
+{% block title %}{{ content.title }}{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/importCSV/manageCSV.css') }}">
+
+<div class="search-bar">
+    <input class="search-input" placeholder="Buscar" type="text"/>
+    <button class="search-button">
+        <i class="fas fa-search"></i>
+    </button>
+    <button class="add-button">
+        Cargar archivo
+    </button>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Lorem</th>
+            <th>Lorem</th>
+            <th>Lorem</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Lorem</td>
+            <td>Lorem</td>
+            <td>Lorem</td>
+        </tr>
+        <tr>
+            <td>Lorem</td>
+            <td>Lorem</td>
+            <td>Lorem</td>
+        </tr>
+        <tr>
+            <td>Lorem</td>
+            <td>Lorem</td>
+            <td>Lorem</td>
+        </tr>
+    </tbody>
+</table>
+{% endblock %}

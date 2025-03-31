@@ -1,0 +1,341 @@
+/* Estilos generales */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+/* Barra de navegación superior */
+.top-nav {
+    background-color: #192f78;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.nav-logo img {
+    max-width: 50px;
+    height: auto;
+}
+
+.nav-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.nav-menu > li {
+    position: relative;
+}
+
+.nav-menu a {
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.nav-menu a:hover {
+    background-color: #081950;
+}
+
+/* Submenús */
+.nav-submenu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #BC2230;
+    border-radius: 4px;
+    padding: 10px;
+    min-width: 200px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.nav-menu li:hover .nav-submenu {
+    display: block;
+}
+
+.nav-submenu li {
+    margin: 5px 0;
+}
+
+.nav-submenu a {
+    padding: 8px 12px;
+    font-size: 0.9em;
+    display: block;
+}
+
+.nav-submenu a:hover {
+    background-color: #d3434f;
+}
+
+/* Botón de cerrar sesión */
+.logout {
+    margin-left: auto;
+}
+
+/* Contenedor principal */
+.container {
+    padding: 20px;
+}
+
+.content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    min-height: calc(100vh - 120px);
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    .nav-menu {
+        gap: 15px;
+    }
+    
+    .nav-menu a {
+        padding: 8px 10px;
+        font-size: 0.9em;
+    }
+    
+    .nav-logo img {
+        max-width: 60px;
+    }
+}
+
+@media (max-width: 480px) {
+    .top-nav {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .nav-menu {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .logout {
+        margin-left: 0;
+        width: 100%;
+    }
+}
+
+
+/* Estilos para la sección de carga */
+.content-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.upload-section {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+.upload-section h2 {
+    color: #192f78;
+    margin-bottom: 25px;
+    font-size: 1.5em;
+}
+
+.form-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+}
+
+.custom-file-input {
+    padding: 12px;
+    border: 2px dashed #192f78;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    flex-grow: 1;
+    cursor: pointer;
+}
+
+.custom-file-input::-webkit-file-upload-button {
+    visibility: hidden;
+}
+
+.custom-file-input::before {
+    content: 'Seleccionar archivo .csv';
+    display: inline-block;
+    background: #192f78;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.upload-button {
+    background-color: #192f78;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1em;
+}
+
+.upload-button:hover {
+    background-color: #081950;
+    transform: translateY(-2px);
+}
+
+.upload-messages {
+    margin-top: 20px;
+}
+
+.alert {
+    padding: 15px;
+    border-radius: 6px;
+    margin: 10px 0;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+
+/* Estilos para el index */
+:root {
+    --primary: #3b82f6;
+    --secondary: #ef4444;
+    --background: #f8fafc;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--background);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 2rem;
+}
+
+.main-content {
+    display: grid;
+    gap: 2rem;
+}
+
+.card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.chart-container {
+    height: 400px;
+    position: relative;
+}
+
+.nav-item {
+    padding: 12px;
+    border-radius: 8px;
+    transition: all 0.3s;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nav-item:hover {
+    background: #f1f5f9;
+}
+
+.nav-item.active {
+    background: var(--primary);
+    color: white;
+}
+
+.button {
+    padding: 12px 24px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.button-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.button-primary:hover {
+    background: #2563eb;
+}
+
+.file-drop-area {
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.file-drop-area.dragover {
+    border-color: var(--primary);
+    background: #eff6ff;
+}
+
+.data-preview {
+    max-height: 400px;
+    overflow: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+th {
+    background: #f8fafc;
+}

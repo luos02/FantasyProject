@@ -1,0 +1,101 @@
+<!-- templates/students/watch_student_list.html -->
+{% extends "base.html" %}
+
+{% block title %}{{ content.title }}{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/importCSV/importCSV.css') }}">
+
+    <div class="upload-container">
+        <h2 class="upload-title">Subir archivo con formato CSV</h2>
+        <div class="file-drop-area" id="dropZone">
+            <img src="https://storage.googleapis.com/a1aa/image/BNO5LFy9qsCnI5bM_G361fp7I0ZZzcSQoEDC0r6M9n0.jpg" 
+                 alt="Icono de arrastrar archivo" 
+                 width="100" 
+                 height="100">
+            
+            <p class="file-label">Arrastra tu archivo aquí o</p>
+            
+            <input type="file" 
+                   class="file-input" 
+                   id="fileInput" 
+                   accept=".csv">
+            
+            <button class="browse-btn" onclick="document.getElementById('fileInput').click()">
+                Examinar archivos
+            </button>
+            
+            <div class="file-name" id="fileName"></div>
+        </div>
+        <button class="import-btn" id="importBtn" disabled>Importar</button>
+    </div>
+
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const fileName = document.getElementById('fileName');
+        const importBtn = document.getElementById('importBtn');
+
+        // Prevent default drag behaviors
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        // Highlight drop zone when item is dragged over it
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            dropZone.classList.add('dragover');
+        }
+
+        function unhighlight(e) {
+            dropZone.classList.remove('dragover');
+        }
+
+        // Handle dropped files
+        dropZone.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles(files);
+        }
+
+        // Handle file selection
+        fileInput.addEventListener('change', function(e) {
+            handleFiles(this.files);
+        });
+
+        function handleFiles(files) {
+            const file = files[0];
+            if (file && file.name.endsWith('.csv')) {
+                fileName.textContent = `Archivo seleccionado: ${file.name}`;
+                importBtn.disabled = false;
+            } else {
+                alert('Por favor selecciona un archivo CSV válido');
+                importBtn.disabled = true;
+            }
+        }
+
+        // Import button handler
+        importBtn.addEventListener('click', function() {
+            const file = fileInput.files[0];
+            if (file) {
+                // Aquí puedes agregar la lógica para procesar el archivo
+                alert(`Importando archivo: ${file.name}`);
+            }
+        });
+    </script>
+
+{% endblock %}
