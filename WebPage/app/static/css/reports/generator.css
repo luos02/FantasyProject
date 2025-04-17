@@ -1,0 +1,281 @@
+/* report-generator.css */
+.report-generator {
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.header-with-breadcrumbs {
+    margin-bottom: 25px;
+}
+
+.report-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    height: calc(100vh - 200px);
+}
+
+.config-panel {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    overflow-y: auto;
+}
+
+.preview-panel {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.config-section {
+    margin-bottom: 30px;
+}
+
+.config-section h2 {
+    font-size: 18px;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #444;
+}
+
+.form-group input[type="text"],
+.form-group input[type="date"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.date-range-picker {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.date-range-picker span {
+    color: #666;
+}
+
+.column-group {
+    margin-bottom: 20px;
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 6px;
+}
+
+.column-group h3 {
+    font-size: 15px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #444;
+}
+
+.checkbox-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.checkbox-item:hover {
+    background: #f0f0f0;
+}
+
+.export-options {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.format-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.radio-item {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.radio-item:hover {
+    border-color: #00796b;
+}
+
+.radio-item input {
+    display: none;
+}
+
+.radio-item input:checked + .radio-content {
+    color: #00796b;
+    font-weight: 500;
+}
+
+.radio-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    color: #666;
+}
+
+.additional-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.preview-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.preview-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.preview-placeholder {
+    text-align: center;
+    color: #999;
+}
+
+.preview-placeholder i {
+    font-size: 50px;
+    margin-bottom: 15px;
+    color: #ddd;
+}
+
+.preview-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.preview-table th, 
+.preview-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.preview-table th {
+    background: #f5f5f5;
+    font-weight: 500;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+/* Estilos para botones */
+.button, .btn-refresh{
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s;
+}
+
+.button-primary {
+    background: #00796b;
+    text-decoration: none;
+    color: white;
+}
+
+.button-primary:hover {
+    background: #00695c;
+}
+
+.button-secondary {
+    background: #f0f0f0;
+    color: #333;
+}
+
+.button-secondary:hover {
+    background: #e0e0e0;
+}
+
+.header-with-breadcrumbs {
+    margin-bottom: 25px;
+  }
+  
+.breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.breadcrumbs a {
+    color: #00796b;
+    text-decoration: none;
+}
+
+.breadcrumbs a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .report-container {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+    
+    .format-options {
+        grid-template-columns: 1fr;
+    }
+}

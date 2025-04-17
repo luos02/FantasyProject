@@ -1,0 +1,597 @@
+{% extends "base.html" %}
+
+{% block title %}Reentrenar Modelo de Ventas{% endblock %}
+
+{% block content %}
+<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/prediction/retrain_model.css') }}"> -->
+
+<div class="retrain-model">
+    <!-- Header con breadcrumbs -->
+    <div class="header-with-breadcrumbs">
+        <nav class="breadcrumbs">
+            <a href="{{ url_for('content.home') }}"><i class="fas fa-home"></i></a>
+            <span><i class="fas fa-chevron-right"></i></span>
+            <a href="{{ url_for('content.subopcion6') }}">Gestionar Modelo</a>
+            <span><i class="fas fa-chevron-right"></i></span>
+            <span>Reentrenar Modelo</span>
+        </nav>
+        
+        <div class="header">
+            <h1>
+                <i class="fas fa-robot"></i>
+                <span>Reentrenar Modelo Prophet</span>
+            </h1>
+        </div>
+    </div>
+
+    <!-- Proceso de Reentrenamiento -->
+    <div class="card retrain-steps">
+        <div class="card-header">
+            <h2><i class="fas fa-sync-alt"></i> Proceso de Reentrenamiento</h2>
+        </div>
+        <div class="card-body">
+            <div class="steps-indicator">
+                <div class="step active">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Cargar Datos</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Configurar Parámetros</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Validar Resultados</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Confirmar Reentrenamiento</div>
+                </div>
+            </div>
+            
+            <!-- Paso 1: Cargar Datos -->
+            <div class="step-content active" data-step="1">
+                <h3><i class="fas fa-database"></i> Cargar Nuevos Datos</h3>
+                <p>Suba un archivo CSV con los datos históricos actualizados para mejorar el modelo.</p>
+                
+                <div class="upload-area">
+                    <div class="upload-box">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Arrastre su archivo CSV aquí o haga clic para seleccionar</p>
+                        <input type="file" id="data-file" accept=".csv">
+                    </div>
+                    <div class="file-requirements">
+                        <h4>Requisitos del archivo:</h4>
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> Formato CSV con codificación UTF-8</li>
+                            <li><i class="fas fa-check-circle"></i> Columnas requeridas: fecha, ventas</li>
+                            <li><i class="fas fa-check-circle"></i> Fechas en formato YYYY-MM-DD</li>
+                            <li><i class="fas fa-check-circle"></i> Tamaño máximo: 10MB</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button class="button button-secondary" disabled>
+                        <i class="fas fa-arrow-left"></i> Anterior
+                    </button>
+                    <button class="button button-primary next-step" data-next="2">
+                        Siguiente <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Paso 2: Configurar Parámetros -->
+            <div class="step-content" data-step="2">
+                <h3><i class="fas fa-sliders-h"></i> Configuración del Modelo</h3>
+                <p>Ajuste los parámetros del modelo Prophet para el reentrenamiento.</p>
+                
+                <div class="parameter-grid">
+                    <div class="parameter-group">
+                        <h4><i class="fas fa-wave-square"></i> Tendencia</h4>
+                        <div class="form-group">
+                            <label for="growth">Tipo de crecimiento</label>
+                            <select id="growth">
+                                <option value="linear">Lineal</option>
+                                <option value="logistic">Logístico</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="changepoints">Puntos de cambio</label>
+                            <input type="number" id="changepoints" value="25" min="5" max="50">
+                        </div>
+                    </div>
+                    
+                    <div class="parameter-group">
+                        <h4><i class="fas fa-calendar-week"></i> Estacionalidad</h4>
+                        <div class="form-group">
+                            <label for="seasonality-mode">Modo</label>
+                            <select id="seasonality-mode">
+                                <option value="additive">Aditiva</option>
+                                <option value="multiplicative">Multiplicativa</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" checked>
+                                Estacionalidad semanal
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" checked>
+                                Estacionalidad anual
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="parameter-group">
+                        <h4><i class="fas fa-bell"></i> Festivos</h4>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" checked>
+                                Incluir festivos
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="holidays-scale">Escala de festivos</label>
+                            <input type="range" id="holidays-scale" min="0.1" max="1" step="0.1" value="0.5">
+                            <span class="range-value">0.5</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button class="button button-secondary prev-step" data-prev="1">
+                        <i class="fas fa-arrow-left"></i> Anterior
+                    </button>
+                    <button class="button button-primary next-step" data-next="3">
+                        Siguiente <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Paso 3: Validar Resultados -->
+            <div class="step-content" data-step="3">
+                <h3><i class="fas fa-chart-line"></i> Validación del Modelo</h3>
+                <p>Revise las métricas de validación cruzada para el nuevo modelo.</p>
+                
+                <div class="validation-metrics">
+                    <div class="metric-comparison">
+                        <h4>Comparación de Métricas</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Métrica</th>
+                                    <th>Modelo Actual</th>
+                                    <th>Modelo Nuevo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>RMSE</td>
+                                    <td>245.78</td>
+                                    <td class="improvement">218.43 <i class="fas fa-arrow-down"></i></td>
+                                </tr>
+                                <tr>
+                                    <td>MAE</td>
+                                    <td>189.32</td>
+                                    <td class="improvement">172.15 <i class="fas fa-arrow-down"></i></td>
+                                </tr>
+                                <tr>
+                                    <td>MAPE</td>
+                                    <td>8.5%</td>
+                                    <td class="improvement">7.8% <i class="fas fa-arrow-down"></i></td>
+                                </tr>
+                                <tr>
+                                    <td>R²</td>
+                                    <td>0.87</td>
+                                    <td class="improvement">0.89 <i class="fas fa-arrow-up"></i></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="validation-chart">
+                        <h4>Comparación de Predicciones</h4>
+                        <div class="chart-container">
+                            <canvas id="validationChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button class="button button-secondary prev-step" data-prev="2">
+                        <i class="fas fa-arrow-left"></i> Anterior
+                    </button>
+                    <button class="button button-primary next-step" data-next="4">
+                        Siguiente <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Paso 4: Confirmar Reentrenamiento -->
+            <div class="step-content" data-step="4">
+                <h3><i class="fas fa-check-circle"></i> Confirmar Reentrenamiento</h3>
+                <p>Revise los detalles y confirme para actualizar el modelo de predicción.</p>
+                
+                <div class="summary-card">
+                    <div class="summary-item">
+                        <span class="summary-label">Archivo de datos:</span>
+                        <span class="summary-value">ventas_actualizadas_2023.csv</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Registros nuevos:</span>
+                        <span class="summary-value">1,245</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Período cubierto:</span>
+                        <span class="summary-value">Ene 2023 - Jul 2023</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Parámetros modificados:</span>
+                        <span class="summary-value">Estacionalidad multiplicativa, 30 puntos de cambio</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Mejora estimada:</span>
+                        <span class="summary-value improvement">11.2% en precisión</span>
+                    </div>
+                </div>
+                
+                <div class="confirmation">
+                    <label class="confirm-checkbox">
+                        <input type="checkbox">
+                        <span>Entiendo que este proceso puede tomar varios minutos y afectará todas las predicciones futuras</span>
+                    </label>
+                    
+                    <div class="form-actions">
+                        <button class="button button-secondary prev-step" data-prev="3">
+                            <i class="fas fa-arrow-left"></i> Anterior
+                        </button>
+                        <button class="button button-primary confirm-button" disabled>
+                            <i class="fas fa-sync-alt"></i> Reentrenar Modelo
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CSS para esta vista -->
+<style>
+.retrain-model {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.steps-indicator {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.steps-indicator::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #eee;
+    z-index: 1;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #e0e0e0;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.step-title {
+    font-size: 14px;
+    color: #666;
+}
+
+.step.active .step-number {
+    background: #00796b;
+    color: white;
+}
+
+.step.active .step-title {
+    color: #333;
+    font-weight: 500;
+}
+
+.step-content {
+    display: none;
+}
+
+.step-content.active {
+    display: block;
+}
+
+.upload-area {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.upload-box {
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    padding: 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    flex: 1;
+}
+
+.upload-box:hover {
+    border-color: #00796b;
+    background: #f5f5f5;
+}
+
+.upload-box i {
+    font-size: 48px;
+    color: #00796b;
+    margin-bottom: 15px;
+}
+
+.upload-box p {
+    margin: 0;
+    color: #666;
+}
+
+#data-file {
+    display: none;
+}
+
+.file-requirements {
+    flex: 1;
+}
+
+.file-requirements h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.file-requirements ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.file-requirements li {
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.file-requirements i {
+    color: #00796b;
+}
+
+.parameter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.parameter-group {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.parameter-group h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.form-group select,
+.form-group input[type="number"] {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.form-group input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+input[type="range"] {
+    width: 100%;
+    margin-top: 5px;
+}
+
+.range-value {
+    display: inline-block;
+    margin-left: 10px;
+    min-width: 30px;
+    text-align: right;
+}
+
+.validation-metrics {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.metric-comparison table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.metric-comparison th,
+.metric-comparison td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.metric-comparison th {
+    background: #f5f5f5;
+}
+
+.improvement {
+    color: #10b981;
+    font-weight: 500;
+}
+
+.validation-chart {
+    height: 300px;
+}
+
+.summary-card {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.summary-item {
+    display: flex;
+    margin-bottom: 12px;
+}
+
+.summary-label {
+    font-weight: 500;
+    min-width: 200px;
+}
+
+.confirm-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f5f5f5;
+    border-radius: 6px;
+}
+
+.confirm-checkbox input {
+    flex-shrink: 0;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.button {
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s;
+}
+
+.button-secondary {
+    background: #e0e0e0;
+    color: #333;
+}
+
+.button-secondary:hover {
+    background: #d0d0d0;
+}
+
+.button-primary {
+    background: #00796b;
+    color: white;
+}
+
+.button-primary:hover {
+    background: #00695c;
+}
+
+.button-primary:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+}
+
+.header-with-breadcrumbs {
+  margin-bottom: 25px;
+}
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.breadcrumbs a {
+  color: #00796b;
+  text-decoration: none;
+}
+
+.breadcrumbs a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .upload-area {
+        flex-direction: column;
+    }
+    
+    .validation-metrics {
+        grid-template-columns: 1fr;
+    }
+    
+    .parameter-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .summary-item {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .summary-label {
+        min-width: auto;
+    }
+}
+</style>
+{% endblock %}
