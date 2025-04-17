@@ -1,0 +1,254 @@
+/* Estilos generales para la vista de gestión de usuarios */
+.user-management-view {
+    padding: 20px;
+}
+
+.header-with-breadcrumbs {
+    margin-bottom: 25px;
+}
+
+.breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.breadcrumbs a {
+    color: #00796b;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.breadcrumbs a:hover {
+    color: #004d40;
+    text-decoration: underline;
+}
+
+.breadcrumbs span {
+    color: #999;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    font-size: 24px;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header h1 i {
+    color: #00796b;
+}
+
+.close-btn {
+    background: rgba(0, 0, 0, 0.05);
+    border: none;
+    color: #666;
+    font-size: 16px;
+    cursor: pointer;
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: #333;
+}
+
+/* Estilos para la tarjeta del formulario */
+.user-form-card {
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    padding: 18px 25px;
+    border-bottom: 1px solid #eee;
+}
+
+.card-header h2 {
+    font-size: 18px;
+    color: #444;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-header h2 i {
+    color: #00796b;
+}
+
+.user-form-container {
+    padding: 25px;
+}
+
+/* Estilos para el formulario */
+.user-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+}
+
+.form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #444;
+    font-size: 14px;
+}
+
+.input-with-icon, .select-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-with-icon i, .select-with-icon i {
+    position: absolute;
+    left: 12px;
+    color: #666;
+    font-size: 16px;
+}
+
+.input-with-icon input, .select-with-icon select {
+    padding-left: 40px !important;
+}
+
+.password-field {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    padding: 0;
+    font-size: 16px;
+}
+
+.toggle-password:hover {
+    color: #333;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group select {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 15px;
+    transition: all 0.3s;
+    width: 100%;
+    background-color: #fff;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #00796b;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 121, 107, 0.1);
+}
+
+.password-strength {
+    height: 4px;
+    background-color: #eee;
+    border-radius: 2px;
+    margin-top: 5px;
+    overflow: hidden;
+}
+
+/* Estilos para los botones */
+.form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    justify-content: flex-end;
+}
+
+.button {
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    border: none;
+}
+
+.button-secondary {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.button-secondary:hover {
+    background-color: #e0e0e0;
+}
+
+.button-primary {
+    background-color: #00796b;
+    color: white;
+}
+
+.button-primary:hover {
+    background-color: #00695c;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .user-form-container {
+        padding: 15px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .button {
+        width: 100%;
+        justify-content: center;
+    }
+}

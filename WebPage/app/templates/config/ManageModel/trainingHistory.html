@@ -1,0 +1,470 @@
+{% extends "base.html" %}
+
+{% block title %}Historial de Entrenamientos{% endblock %}
+
+{% block content %}
+<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/model/history.css') }}"> -->
+
+<div class="training-history">
+    <!-- Encabezado con breadcrumbs -->
+    <div class="header-with-breadcrumbs">
+        <nav class="breadcrumbs">
+            <a href="{{ url_for('content.home') }}"><i class="fas fa-home"></i></a>
+            <span><i class="fas fa-chevron-right"></i></span>
+            <span>Historial de Entrenamientos</span>
+        </nav>
+        
+        <div class="header">
+            <h1>
+                <i class="fas fa-history"></i>
+                <span>Historial de Entrenamientos</span>
+            </h1>
+        </div>
+    </div>
+
+    <!-- Filtros y búsqueda -->
+    <div class="filters-card card">
+        <div class="filter-row">
+            <div class="filter-group">
+                <label for="date-range">Rango de fechas:</label>
+                <div class="date-range-picker">
+                    <input type="date" id="start-date">
+                    <span>a</span>
+                    <input type="date" id="end-date">
+                </div>
+            </div>
+            
+            <div class="filter-group">
+                <label for="model-type">Tipo de modelo:</label>
+                <select id="model-type">
+                    <option value="all">Todos</option>
+                    <option value="prophet">Prophet</option>
+                    <option value="initial">Inicial</option>
+                    <option value="retrained">Reentrenado</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="results">Resultados:</label>
+                <select id="results">
+                    <option value="all">Todos</option>
+                    <option value="improved">Con mejora</option>
+                    <option value="worsened">Con empeoro</option>
+                </select>
+            </div>
+            
+            <button class="button button-secondary">
+                <i class="fas fa-filter"></i> Filtrar
+            </button>
+            
+            <button class="button button-secondary">
+                <i class="fas fa-redo"></i> Restablecer
+            </button>
+        </div>
+    </div>
+
+    <!-- Estadísticas resumen -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-value">15</div>
+            <div class="stat-label">Entrenamientos totales</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">12</div>
+            <div class="stat-label">Reentrenamientos</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">8.2%</div>
+            <div class="stat-label">Mejora promedio</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">3d 5h</div>
+            <div class="stat-label">Tiempo total entrenamiento</div>
+        </div>
+    </div>
+
+    <!-- Tabla de historial -->
+    <div class="history-card card">
+        <div class="card-header">
+            <h2><i class="fas fa-table"></i> Registro de Entrenamientos</h2>
+            <div class="header-actions">
+                <button class="button button-secondary">
+                    <i class="fas fa-file-export"></i> Exportar
+                </button>
+            </div>
+        </div>
+        
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Fecha</th>
+                            <th>Tipo</th>
+                            <th>Datos utilizados</th>
+                            <th>Duración</th>
+                            <th>RMSE</th>
+                            <th>MAE</th>
+                            <th>Mejora</th>
+                            <th>Usuario</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Ejemplo de fila 1 -->
+                        <tr>
+                            <td>#TRN-0015</td>
+                            <td>15/Jul/2023 14:30</td>
+                            <td><span class="badge badge-retrain">Reentrenamiento</span></td>
+                            <td>1,245 registros (Ene-Jul 2023)</td>
+                            <td>42 min</td>
+                            <td>218.43</td>
+                            <td>172.15</td>
+                            <td><span class="improvement">+11.2%</span></td>
+                            <td>admin@empresa.com</td>
+                            <td>
+                                <button class="icon-button" title="Ver detalles">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="icon-button" title="Descargar reporte">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        
+                        <!-- Ejemplo de fila 2 -->
+                        <tr>
+                            <td>#TRN-0014</td>
+                            <td>10/Jun/2023 09:15</td>
+                            <td><span class="badge badge-retrain">Reentrenamiento</span></td>
+                            <td>980 registros (Abr-May 2023)</td>
+                            <td>38 min</td>
+                            <td>225.67</td>
+                            <td>178.92</td>
+                            <td><span class="improvement">+8.5%</span></td>
+                            <td>analyst@empresa.com</td>
+                            <td>
+                                <button class="icon-button" title="Ver detalles">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="icon-button" title="Descargar reporte">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        
+                        <!-- Ejemplo de fila 3 -->
+                        <tr>
+                            <td>#TRN-0013</td>
+                            <td>01/May/2023 16:45</td>
+                            <td><span class="badge badge-standard">Mantenimiento</span></td>
+                            <td>Mismo dataset</td>
+                            <td>25 min</td>
+                            <td>230.12</td>
+                            <td>182.45</td>
+                            <td><span class="neutral">+0.3%</span></td>
+                            <td>system@empresa.com</td>
+                            <td>
+                                <button class="icon-button" title="Ver detalles">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="icon-button" title="Descargar reporte">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        
+                        <!-- Ejemplo de fila 4 -->
+                        <tr>
+                            <td>#TRN-0012</td>
+                            <td>15/Abr/2023 11:20</td>
+                            <td><span class="badge badge-retrain">Reentrenamiento</span></td>
+                            <td>1,150 registros (Ene-Mar 2023)</td>
+                            <td>47 min</td>
+                            <td>235.89</td>
+                            <td>186.72</td>
+                            <td><span class="worsened">-2.1%</span></td>
+                            <td>admin@empresa.com</td>
+                            <td>
+                                <button class="icon-button" title="Ver detalles">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="icon-button" title="Descargar reporte">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        
+                        <!-- Más filas de ejemplo... -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Paginación -->
+            <div class="pagination">
+                <button class="button button-secondary" disabled>
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="page-button active">1</button>
+                <button class="page-button">2</button>
+                <button class="page-button">3</button>
+                <span>...</span>
+                <button class="page-button">5</button>
+                <button class="button button-secondary">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CSS para esta vista -->
+<style>
+.training-history {
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.filters-card {
+    margin-bottom: 20px;
+    padding: 15px 20px;
+}
+
+.filter-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.filter-group label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #555;
+}
+
+.date-range-picker {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.date-range-picker input {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    min-width: 150px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 28px;
+    font-weight: 600;
+    color: #00796b;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: #666;
+}
+
+.history-card {
+    margin-bottom: 30px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.card-header h2 {
+    font-size: 18px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.history-table th,
+.history-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.history-table th {
+    background: #f5f5f5;
+    font-weight: 500;
+    position: sticky;
+    top: 0;
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.badge-retrain {
+    background-color: #e6f7ee;
+    color: #10b981;
+}
+
+.badge-standard {
+    background-color: #ebf2ff;
+    color: #3b82f6;
+}
+
+.improvement {
+    color: #10b981;
+    font-weight: 500;
+}
+
+.neutral {
+    color: #666;
+}
+
+.worsened {
+    color: #ef4444;
+}
+
+.icon-button {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: none;
+    color: #666;
+    cursor: pointer;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-button:hover {
+    background: #f0f0f0;
+    color: #333;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    margin-top: 20px;
+}
+
+.page-button {
+    width: 35px;
+    height: 35px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.page-button:hover {
+    background: #f5f5f5;
+}
+
+.page-button.active {
+    background: #00796b;
+    color: white;
+    border-color: #00796b;
+}
+
+.header-with-breadcrumbs {
+  margin-bottom: 25px;
+}
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.breadcrumbs a {
+  color: #00796b;
+  text-decoration: none;
+}
+
+.breadcrumbs a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .filter-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .filter-group {
+        width: 100%;
+    }
+    
+    select {
+        width: 100%;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .history-table {
+        font-size: 14px;
+    }
+    
+    .history-table th,
+    .history-table td {
+        padding: 8px 10px;
+    }
+}
+</style>
+{% endblock %}

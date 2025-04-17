@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block title %}Análisis Personalizado de Ventas{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/reports/generateReport.css') }}">
+
+<div class="dashboard">
+    <div class="header-with-breadcrumbs">
+        <nav class="breadcrumbs">
+            <a href="{{ url_for('content.home') }}"><i class="fas fa-home"></i></a>
+            <span><i class="fas fa-chevron-right"></i></span>
+            <a href="{{ url_for('content.subopcion3') }}">Análisis de Ventas</a>
+            <span><i class="fas fa-chevron-right"></i></span>
+            <span>Análisis Personalizado</span>
+        </nav>
+        
+        <div class="header">
+            <h1>
+                <i class="fas fa-chart-line"></i>
+                <span>Análisis Personalizado de Ventas</span>
+            </h1>
+        </div>
+    </div>
+
+    <!-- Panel de configuración -->
+    <div class="config-panel">
+        <div class="config-row">
+            <div class="form-group">
+                <label for="date-range">Rango de Fechas</label>
+                <div class="date-range-picker">
+                    <input type="date" id="start-date" value="2023-01-01">
+                    <span>a</span>
+                    <input type="date" id="end-date" value="2023-12-31">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="time-granularity">Granularidad Temporal</label>
+                <select id="time-granularity">
+                    <option value="daily">Diaria</option>
+                    <option value="weekly" selected>Semanal</option>
+                    <option value="monthly">Mensual</option>
+                    <option value="quarterly">Trimestral</option>
+                </select>
+            </div>
+            
+            <button class="button button-primary">
+                <i class="fas fa-sync-alt"></i> Aplicar Filtros
+            </button>
+        </div>
+        
+        <div class="config-row">
+            <div class="metrics-selector">
+                <h3><i class="fas fa-check-square"></i> Métricas a Visualizar</h3>
+                <div class="checkbox-grid">
+                    <label class="checkbox-item">
+                        <input type="checkbox" checked>
+                        <span>Ventas totales</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" checked>
+                        <span>Ventas promedio</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox">
+                        <span>Unidades vendidas</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" checked>
+                        <span>Margen de ganancia</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox">
+                        <span>Nuevos clientes</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" checked>
+                        <span>Tasa de conversión</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resultados del análisis -->
+    <div class="analysis-results">
+        <!-- Resumen estadístico -->
+        <div class="stats-summary">
+            <h2><i class="fas fa-chart-pie"></i> Resumen Estadístico</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">$128,450</div>
+                    <div class="stat-label">Ventas Totales</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">15.2%</div>
+                    <div class="stat-label">Crecimiento Interanual</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">42.5%</div>
+                    <div class="stat-label">Margen Promedio</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">328</div>
+                    <div class="stat-label">Transacciones</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Gráfico principal -->
+        <div class="chart-container main-chart">
+            <div class="chart-header">
+                <h2><i class="fas fa-chart-line"></i> Tendencia de Ventas</h2>
+                <div class="chart-actions">
+                    <button class="button button-secondary">
+                        <i class="fas fa-expand"></i> Ampliar
+                    </button>
+                </div>
+            </div>
+            <canvas id="salesTrendChart"></canvas>
+        </div>
+        
+        <!-- Gráficos secundarios -->
+        <div class="secondary-charts">
+            <div class="chart-container">
+                <h2><i class="fas fa-calendar-alt"></i> Estacionalidad</h2>
+                <canvas id="seasonalityChart"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <h2><i class="fas fa-boxes"></i> Ventas por Categoría</h2>
+                <canvas id="categoryChart"></canvas>
+            </div>
+        </div>
+        
+        <!-- Tabla de datos -->
+        <div class="data-table">
+            <h2><i class="fas fa-table"></i> Datos Detallados</h2>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Período</th>
+                            <th>Ventas Totales</th>
+                            <th>Ventas Promedio</th>
+                            <th>Margen</th>
+                            <th>Tasa Conversión</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Ene 2023</td>
+                            <td>$12,450</td>
+                            <td>$415</td>
+                            <td>41.2%</td>
+                            <td>3.5%</td>
+                        </tr>
+                        <tr>
+                            <td>Feb 2023</td>
+                            <td>$11,780</td>
+                            <td>$421</td>
+                            <td>40.8%</td>
+                            <td>3.2%</td>
+                        </tr>
+                        <tr>
+                            <td>Mar 2023</td>
+                            <td>$14,230</td>
+                            <td>$459</td>
+                            <td>43.1%</td>
+                            <td>3.8%</td>
+                        </tr>
+                        <!-- Más filas de datos... -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

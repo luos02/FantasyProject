@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% block title %}Análisis de Ventas - Resultados{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/reports/viewReport.css') }}">
+
+<div class="sales-results-container">
+    <!-- Encabezado con navegación -->
+    <div class="results-header">
+        <nav class="breadcrumbs">
+            <a href="{{ url_for('content.home') }}"><i class="fas fa-home"></i></a>
+            <span><i class="fas fa-chevron-right"></i></span>
+            <span>Análisis de Ventas</span>
+        </nav>
+        
+        <div class="header-content">
+            <div class="title-section">
+                <h1>
+                    <i class="fas fa-chart-line"></i>
+                    <span>Análisis Predictivo de Ventas</span>
+                </h1>
+                <p class="subtitle">Datos históricos y proyecciones para el período 2020-2024</p>
+            </div>
+            
+            <div class="header-actions">
+                <a href="{{ url_for('content.subopcion7') }}" class="button button-primary">
+                    <i class="fas fa-sliders-h"></i> Personalizar Análisis
+                </a>
+            </div>
+        </div>
+        
+        <div class="time-filter">
+            <div class="filter-item active">Últimos 12 meses</div>
+            <div class="filter-item">2023</div>
+            <div class="filter-item">2022</div>
+            <div class="filter-item">Todo el histórico</div>
+        </div>
+    </div>
+
+    <!-- Resumen de KPIs -->
+    <div class="kpi-summary">
+        <div class="kpi-card primary">
+            <div class="kpi-value">$128,450</div>
+            <div class="kpi-label">Ventas Totales</div>
+            <div class="kpi-trend positive">
+                <i class="fas fa-arrow-up"></i> 12.5% vs período anterior
+            </div>
+        </div>
+        
+        <div class="kpi-card">
+            <div class="kpi-value">$5,240</div>
+            <div class="kpi-label">Venta Promedio</div>
+            <div class="kpi-trend positive">
+                <i class="fas fa-arrow-up"></i> 8.3% vs período anterior
+            </div>
+        </div>
+        
+        <div class="kpi-card">
+            <div class="kpi-value">42.5%</div>
+            <div class="kpi-label">Margen Bruto</div>
+            <div class="kpi-trend neutral">
+                <i class="fas fa-minus"></i> 0.5% vs período anterior
+            </div>
+        </div>
+        
+        <div class="kpi-card">
+            <div class="kpi-value">328</div>
+            <div class="kpi-label">Transacciones</div>
+            <div class="kpi-trend negative">
+                <i class="fas fa-arrow-down"></i> 5.2% vs período anterior
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráfico principal -->
+    <div class="main-chart-container">
+        <div class="chart-header">
+            <h2>
+                <i class="fas fa-chart-line"></i>
+                <span>Tendencia de Ventas y Pronóstico</span>
+            </h2>
+            <div class="chart-legend">
+                <div class="legend-item">
+                    <span class="legend-color historical"></span>
+                    <span>Histórico</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color forecast"></span>
+                    <span>Pronóstico</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color confidence"></span>
+                    <span>Intervalo de confianza</span>
+                </div>
+            </div>
+        </div>
+        <div class="chart-wrapper">
+            <canvas id="salesTrendChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Gráficos secundarios -->
+    <div class="secondary-charts">
+        <div class="chart-container">
+            <div class="chart-header">
+                <h2>
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Descomposición Estacional</span>
+                </h2>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="seasonalityChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <div class="chart-header">
+                <h2>
+                    <i class="fas fa-boxes"></i>
+                    <span>Ventas por Categoría</span>
+                </h2>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="categoryChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de datos -->
+    <div class="data-table-container">
+        <div class="table-header">
+            <h2>
+                <i class="fas fa-table"></i>
+                <span>Detalle Mensual de Ventas</span>
+            </h2>
+            <div class="table-actions">
+                <button class="button button-secondary">
+                    <i class="fas fa-download"></i> Exportar Datos
+                </button>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mes/Año</th>
+                        <th>Ventas Totales</th>
+                        <th>Ventas Diarias Promedio</th>
+                        <th>Margen Bruto</th>
+                        <th>Transacciones</th>
+                        <th>Ticket Promedio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Jul 2023</td>
+                        <td>$12,450</td>
+                        <td>$415</td>
+                        <td>41.2%</td>
+                        <td>145</td>
+                        <td>$85.86</td>
+                    </tr>
+                    <tr>
+                        <td>Jun 2023</td>
+                        <td>$11,780</td>
+                        <td>$393</td>
+                        <td>40.8%</td>
+                        <td>132</td>
+                        <td>$89.24</td>
+                    </tr>
+                    <tr>
+                        <td>May 2023</td>
+                        <td>$14,230</td>
+                        <td>$459</td>
+                        <td>43.1%</td>
+                        <td>156</td>
+                        <td>$91.22</td>
+                    </tr>
+                    <!-- Más filas de datos... -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

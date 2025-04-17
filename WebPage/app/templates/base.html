@@ -11,28 +11,27 @@
     <!-- Barra de navegación superior -->
     <nav class="top-nav">
         <div class="nav-logo">
-            <img src="{{ url_for('static', filename='img/logo-escuela.png') }}" alt="Logo de la escuela">
+            <a href="{{ url_for('content.home') }}">
+                <img src="{{ url_for('static', filename='img/logo-escuela.png') }}" alt="Logo de la escuela">
+            </a>
         </div>
         <ul class="nav-menu">
             <li>
-                <a href="#"><i class="fa-solid fa-school"></i>Inicio</a>
-                <ul class="nav-submenu">
-                    <li><a href="{{ url_for('content.subopcion1') }}">Cargar archivo</a></li>
-                    <li><a href="{{ url_for('content.subopcion2') }}">Ver archivos</a></li>
-                </ul>
+                <a href="{{ url_for('content.home') }}"><i class="fa-solid fa-school"></i>Inicio</a>
             </li>
             <li>
                 <a href="#"><i class="fa-solid fa-user-tie"></i>Reportes</a>
                 <ul class="nav-submenu">
                     <li><a href="{{ url_for('content.subopcion3') }}">Ver reportes</a></li>
-                    <li><a href="{{ url_for('content.subopcion4') }}">subopción 1</a></li>
+                    <li><a href="{{ url_for('content.subopcion4') }}">Descargar reportes</a></li>
                 </ul>
             </li>
             <li>
                 <a href="#"><i class="fa-solid fa-user-tie"></i>Configuración</a>
                 <ul class="nav-submenu">
-                    <li><a href="{{ url_for('content.subopcion3') }}">Modificar perfil</a></li>
-                    <li><a href="{{ url_for('content.subopcion4') }}">Gestionar contraseñas</a></li>
+                    <li><a href="{{ url_for('content.subopcion5') }}">Gestionar Usuarios</a></li>
+                    <li><a href="{{ url_for('content.subopcion6') }}">Gestionar Modelo</a></li>
+                    <li><a href="{{ url_for('content.subopcion2') }}">Ver archivos subidos</a></li>
                 </ul>
             </li>
             <li class="logout">

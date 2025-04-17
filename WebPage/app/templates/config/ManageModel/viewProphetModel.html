@@ -1,0 +1,361 @@
+{% extends "base.html" %}
+
+{% block title %}Modelo de Predicción de Ventas{% endblock %}
+
+{% block content %}
+<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/prediction/model_view.css') }}"> -->
+
+<div class="model-dashboard">
+    <!-- Header con breadcrumbs -->
+    <div class="header-with-breadcrumbs">
+        <nav class="breadcrumbs">
+            <a href="{{ url_for('content.home') }}"><i class="fas fa-home"></i></a>
+            <span><i class="fas fa-chevron-right"></i></span>
+            <span>Gestión de Usuarios</span>
+        </nav>
+        
+        <div class="header">
+            <h1>
+                <i class="fas fa-chart-line"></i>
+                <span>Modelo de Predicción de Ventas</span>
+            </h1>
+        </div>
+    </div>
+
+    <!-- Resumen del Modelo -->
+    <div class="model-summary card">
+        <div class="card-header">
+            <h2><i class="fas fa-info-circle"></i> Resumen del Modelo</h2>
+        </div>
+        <div class="card-body">
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Algoritmo</div>
+                    <div class="metric-value">Facebook Prophet</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Último entrenamiento</div>
+                    <div class="metric-value">15/Jul/2023 14:30</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Período histórico</div>
+                    <div class="metric-value">Ene 2020 - Jun 2023</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">RMSE</div>
+                    <div class="metric-value">245.78</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">MAE</div>
+                    <div class="metric-value">189.32</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Tendencia principal</div>
+                    <div class="metric-value trend-up"><i class="fas fa-arrow-up"></i> 12% mensual</div>
+                </div>
+            </div>
+            
+            <div class="model-components">
+                <h3><i class="fas fa-puzzle-piece"></i> Componentes del Modelo</h3>
+                <div class="components-grid">
+                    <div class="component">
+                        <h4>Tendencia</h4>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    <div class="component">
+                        <h4>Estacionalidad Semanal</h4>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 65%"></div>
+                        </div>
+                    </div>
+                    <div class="component">
+                        <h4>Estacionalidad Anual</h4>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 45%"></div>
+                        </div>
+                    </div>
+                    <div class="component">
+                        <h4>Festivos</h4>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 30%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráficos de Predicción -->
+    <div class="prediction-charts">
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-chart-area"></i> Predicción vs Real</h2>
+                <div class="time-range-selector">
+                    <select>
+                        <option>Últimos 3 meses</option>
+                        <option>Últimos 6 meses</option>
+                        <option>Último año</option>
+                        <option>Todo el histórico</option>
+                    </select>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="predictionChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-calendar-alt"></i> Componentes del Modelo</h2>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="componentsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de Métricas Detalladas -->
+    <div class="card metrics-table">
+        <div class="card-header">
+            <h2><i class="fas fa-table"></i> Métricas de Rendimiento</h2>
+        </div>
+        <div class="card-body">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Métrica</th>
+                        <th>Valor</th>
+                        <th>Interpretación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>RMSE</td>
+                        <td>245.78</td>
+                        <td>Error estándar moderado</td>
+                    </tr>
+                    <tr>
+                        <td>MAE</td>
+                        <td>189.32</td>
+                        <td>Error absoluto aceptable</td>
+                    </tr>
+                    <tr>
+                        <td>MAPE</td>
+                        <td>8.5%</td>
+                        <td>Precisión buena</td>
+                    </tr>
+                    <tr>
+                        <td>R²</td>
+                        <td>0.87</td>
+                        <td>Buen ajuste</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="user-actions">
+            <a href="{{ url_for('content.subopcion6_1') }}" class="button button-primary">
+                <i class="fas fa-cog"></i> Reentrenar modelo
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- CSS para esta vista -->
+<style>
+.model-dashboard {
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 25px;
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-header h2 {
+    font-size: 18px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.metric-item {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 6px;
+}
+
+.metric-label {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.metric-value {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.trend-up {
+    color: #10b981;
+}
+
+.trend-down {
+    color: #ef4444;
+}
+
+.model-components {
+    margin-top: 25px;
+}
+
+.model-components h3 {
+    font-size: 16px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.components-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.component {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 6px;
+}
+
+.component h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.progress-bar {
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #00796b;
+}
+
+.prediction-charts {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+.chart-container {
+    height: 400px;
+    position: relative;
+}
+
+.metrics-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.metrics-table th, 
+.metrics-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.metrics-table th {
+    background: #f5f5f5;
+    font-weight: 500;
+}
+
+.time-range-selector select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.user-actions {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.button-primary {
+    background-color: #00796b;
+    color: white;
+    text-decoration: none;
+}
+
+.button-primary:hover {
+    background-color: #00695c;
+}
+
+.header-with-breadcrumbs {
+  margin-bottom: 25px;
+}
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.breadcrumbs a {
+  color: #00796b;
+  text-decoration: none;
+}
+
+.breadcrumbs a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .metrics-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .components-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}
