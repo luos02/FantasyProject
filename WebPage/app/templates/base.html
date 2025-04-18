@@ -5,39 +5,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Plataforma{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Barra de navegación superior -->
+    <!-- Barra de navegación superior mejorada -->
     <nav class="top-nav">
-        <div class="nav-logo">
-            <a href="{{ url_for('content.home') }}">
-                <img src="{{ url_for('static', filename='img/logo-escuela.png') }}" alt="Logo de la escuela">
-            </a>
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="{{ url_for('content.home') }}" class="logo-link">
+                    <img src="{{ url_for('static', filename='img/logo-escuela.png') }}" alt="Logo de la escuela" class="logo-img">
+                    <span class="logo-text">SalesPredict</span>
+                </a>
+            </div>
+            
+            <div class="nav-menu-container">
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="{{ url_for('content.home') }}" class="nav-link">
+                            <i class="fas fa-home nav-icon"></i>
+                            <span class="nav-text">Inicio</span>
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-chart-bar nav-icon"></i>
+                            <span class="nav-text">Reportes</span>
+                            <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url_for('content.subopcion3') }}" class="dropdown-link">Ver reportes</a></li>
+                            <li><a href="{{ url_for('content.subopcion4') }}" class="dropdown-link">Descargar reportes</a></li>
+                        </ul>
+                    </li>
+                    
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-cog nav-icon"></i>
+                            <span class="nav-text">Configuración</span>
+                            <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url_for('content.subopcion5') }}" class="dropdown-link">Gestionar Usuarios</a></li>
+                            <li><a href="{{ url_for('content.subopcion6') }}" class="dropdown-link">Gestionar Modelo</a></li>
+                            <li><a href="{{ url_for('content.subopcion2') }}" class="dropdown-link">Ver archivos subidos</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <div class="nav-actions">
+                    <a href="{{ url_for('auth.login') }}" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Cerrar sesión</span>
+                    </a>
+                </div>
+            </div>
+            
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
-        <ul class="nav-menu">
-            <li>
-                <a href="{{ url_for('content.home') }}"><i class="fa-solid fa-school"></i>Inicio</a>
-            </li>
-            <li>
-                <a href="#"><i class="fa-solid fa-user-tie"></i>Reportes</a>
-                <ul class="nav-submenu">
-                    <li><a href="{{ url_for('content.subopcion3') }}">Ver reportes</a></li>
-                    <li><a href="{{ url_for('content.subopcion4') }}">Descargar reportes</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#"><i class="fa-solid fa-user-tie"></i>Configuración</a>
-                <ul class="nav-submenu">
-                    <li><a href="{{ url_for('content.subopcion5') }}">Gestionar Usuarios</a></li>
-                    <li><a href="{{ url_for('content.subopcion6') }}">Gestionar Modelo</a></li>
-                    <li><a href="{{ url_for('content.subopcion2') }}">Ver archivos subidos</a></li>
-                </ul>
-            </li>
-            <li class="logout">
-                <a href="{{ url_for('auth.login') }}"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
-            </li>
-        </ul>
     </nav>
 
     <!-- Contenido principal -->
