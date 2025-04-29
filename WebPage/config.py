@@ -1,5 +1,11 @@
-import os
+from app.db_config import get_database_uri
 
 class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'una_clave_secreta_muy_segura' #This was done by chat gpt, don't judge me.
-#                                                                                atte: Luis <3
+    # Configuración general
+    SECRET_KEY = 'tu_clave_secreta_aqui'
+    DEBUG = True
+    
+    # Configuración de la base de datos PostgreSQL
+    # Obtiene la URI de la función en db_config.py
+    SQLALCHEMY_DATABASE_URI = get_database_uri()
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
