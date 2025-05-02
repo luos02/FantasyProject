@@ -37,16 +37,16 @@ def test_connection(host, port, dbname, user, password):
         for table in tables:
             print(f"- {table[0]}")
         
-        # Si existe la tabla 'usuarios', verificar su estructura
-        if ('usuarios',) in tables:
+        # Si existe la tabla 'users', verificar su estructura
+        if ('users',) in tables:
             cursor.execute("""
                 SELECT column_name, data_type 
                 FROM information_schema.columns 
-                WHERE table_name = 'usuarios';
+                WHERE table_name = 'users';
             """)
             
             columns = cursor.fetchall()
-            print("\nColumnas en la tabla 'usuarios':")
+            print("\nColumnas en la tabla 'users':")
             for column in columns:
                 print(f"- {column[0]} ({column[1]})")
         

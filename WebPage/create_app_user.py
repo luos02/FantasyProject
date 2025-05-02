@@ -13,7 +13,7 @@ DB_PASSWORD = "password123"
 
 def create_user(username, email, password, nombre_completo=None):
     """
-    Crea un nuevo usuario en la tabla 'usuarios'
+    Crea un nuevo usuario en la tabla 'users'
     
     Args:
         username (str): Nombre de usuario único
@@ -44,20 +44,20 @@ def create_user(username, email, password, nombre_completo=None):
         cursor = conn.cursor()
         
         # Verificar si el usuario ya existe
-        cursor.execute("SELECT username FROM usuarios WHERE username = %s", (username,))
+        cursor.execute("SELECT username FROM users WHERE username = %s", (username,))
         if cursor.fetchone():
             conn.close()
             return False, f"El usuario '{username}' ya existe"
         
         # Verificar si el email ya existe
-        cursor.execute("SELECT email FROM usuarios WHERE email = %s", (email,))
+        cursor.execute("SELECT email FROM users WHERE email = %s", (email,))
         if cursor.fetchone():
             conn.close()
             return False, f"El email '{email}' ya está registrado"
         
         # Insertar el nuevo usuario
         cursor.execute("""
-            INSERT INTO usuarios (username, email, password_hash, nombre_completo, fecha_creacion, activo)
+            INSERT INTO users (username, email, password_hash, nombre_completo, fecha_creacion, activo)
             VALUES (%s, %s, %s, %s, %s, %s)
             RETURNING id;
         """, (username, email, password_hash, nombre_completo, now, True))
@@ -82,7 +82,7 @@ def create_user(username, email, password, nombre_completo=None):
         return False, f"Error al crear el usuario: {str(e)}"
 
 def verify_table_exists():
-    """Verifica si la tabla 'usuarios' existe, y la crea si no existe"""
+    """Verifica si la tabla 'users' existe, y la crea si no existe"""
     try:
         conn = psycopg2.connect(
             host=DB_HOST,
@@ -98,21 +98,23 @@ def verify_table_exists():
             SELECT EXISTS (
                 SELECT FROM information_schema.tables 
                 WHERE table_schema = 'public' 
-                AND table_name = 'usuarios'
+                AND table_name = 'users'
             );
-        """)
+            """
+        )
         
         if not cursor.fetchone()[0]:
-            print("La tabla 'usuarios' no existe. Creándola...")
+            print("La tabla 'users' no existe. Creándola...")
             
             # Crear la tabla
             cursor.execute("""
-                CREATE TABLE usuarios (
+                CREATE TABLE users (
                     id SERIAL PRIMARY KEY,
                     username VARCHAR(50) UNIQUE NOT NULL,
                     email VARCHAR(100) UNIQUE NOT NULL,
-                    password_hash VARCHAR(128) NOT NULL,
+                    password_hash VARCHAR(255) NOT NULL,  -- Para almacenar contraseñas hasheadas con bcrypt
                     nombre_completo VARCHAR(100),
+                    roles VARCHAR(20) NOT NULL DEFAULT 'admin',
                     fecha_creacion TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
                     ultimo_login TIMESTAMP WITH TIME ZONE,
                     activo BOOLEAN DEFAULT TRUE
@@ -120,9 +122,9 @@ def verify_table_exists():
             """)
             
             conn.commit()
-            print("Tabla 'usuarios' creada exitosamente.")
+            print("Tabla 'users' creada exitosamente.")
         else:
-            print("La tabla 'usuarios' ya existe.")
+            print("La tabla 'users' ya existe.")
         
         cursor.close()
         conn.close()
@@ -134,7 +136,7 @@ def verify_table_exists():
 def main():
     # Verificar que la tabla existe
     if not verify_table_exists():
-        print("No se pudo verificar o crear la tabla 'usuarios'. Abortando.")
+        print("No se pudo verificar o crear la tabla 'users'. Abortando.")
         return
     
     # Solicitar datos al usuario
