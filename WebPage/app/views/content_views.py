@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template
 from app.controllers.content_controller import get_content
+from app.controllers.user_controller import list_users, add_user
 
 # Crear un Blueprint para las rutas de contenido
 content_bp = Blueprint('content', __name__)
@@ -25,13 +26,11 @@ def subopcion4():
 
 @content_bp.route("/Config")
 def subopcion5():
-    content = get_content("Config")
-    return render_template("config/manageUsers/manageUsers.html", content=content)
+    return list_users()
 
 @content_bp.route("/Config/addUsers")
 def subopcion5_1():
-    content = get_content("addUsers")
-    return render_template("config/manageUsers/addUsers.html", content=content)
+    return add_user()
 
 @content_bp.route("/Config/ManageModel")
 def subopcion6():

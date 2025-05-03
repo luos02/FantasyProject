@@ -12,15 +12,18 @@ class UserModel(db.Model):
     email = db.Column(db.String(100), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     nombre_completo = db.Column(db.String(100))
+    roles = db.Column(db.String(20), default='viewer')  # Nueva columna
     fecha_creacion = db.Column(db.DateTime, default=datetime.utcnow)
     ultimo_login = db.Column(db.DateTime)
     activo = db.Column(db.Boolean, default=True)
     
-    def __init__(self, username, email, password, nombre_completo=None):
+    def __init__(self, username, email, password, nombre_completo=None, roles='viewer', activo=True):
         self.username = username
         self.email = email
         self.set_password(password)
         self.nombre_completo = nombre_completo
+        self.roles = roles
+        self.activo = activo
     
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)

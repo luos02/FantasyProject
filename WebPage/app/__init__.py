@@ -20,9 +20,11 @@ def create_app():
             traceback.print_exc()
             # No fallar completamente, permitir que la aplicación continúe
     
-    # Registrar blueprints
+    from app.controllers.user_controller import user_bp as config_bp
     from app.views.auth_views import auth_bp
     from app.views.content_views import content_bp
+    
+    app.register_blueprint(config_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(content_bp)
     
