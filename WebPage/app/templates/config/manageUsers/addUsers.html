@@ -6,14 +6,13 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/config/addUsers.css') }}">
 
 <div class="main-content user-management-view">
-    <!-- Encabezado con breadcrumbs -->
     <div class="header-with-breadcrumbs">
         <nav class="breadcrumbs">
             <a href="{{ url_for('content.home') }}"><i class="fas fa-home"></i></a>
             <span><i class="fas fa-chevron-right"></i></span>
-            <a href="{{ url_for('content.subopcion5') }}">Gestión de Usuarios</a>
+            <a href="{{ url_for('config.list_users') }}">Gestión de Usuarios</a>
             <span><i class="fas fa-chevron-right"></i></span>
-            <span>Agregar Usuario</span>
+            <span>{{ 'Editar' if edit_mode else 'Agregar' }} Usuario</span>
         </nav>
         
         <div class="header">
@@ -23,95 +22,119 @@
             </h1>
         </div>
 
-        <a href="{{ url_for('content.subopcion5') }}" class="button button-secondary">
+        <a href="{{ url_for('config.list_users') }}" class="button button-secondary">
             <i class="fas fa-arrow-left"></i> Volver al listado
         </a>
     </div>
 
-    <!-- Formulario de Usuario -->
     <div class="card user-form-card">
         <div class="card-header">
             <h2><i class="fas fa-id-card"></i> Información del Usuario</h2>
         </div>
         
         <div class="user-form-container">
-            <form class="user-form" method="POST" action="">
-                <!-- Campo oculto para ID del usuario en modo edición -->
+            <form class="user-form" method="POST" 
+                  action="{{ url_for('config.edit_user', user_id=user.id) if edit_mode else url_for('config.add_user') }}">
                 {% if edit_mode %}
                 <input type="hidden" name="user_id" value="{{ user.id }}">
                 {% endif %}
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="user-name">Nombre completo</label>
+                        <label for="username">Nombre de usuario</label>
                         <div class="input-with-icon">
                             <i class="fas fa-user"></i>
-                            <input type="text" id="user-name" name="user-name" 
-                                   value="{{ user.name if edit_mode else '' }}" 
-                                   placeholder="Ej: Juan Pérez" required>
+                            <input type="text" id="username" name="username" 
+                                value="{{ user.username if edit_mode else '' }}" 
+                                placeholder="Ej: jperez" required>
                         </div>
                     </div>
                     
                     <div class="form-group">
-                        <label for="user-email">Correo electrónico</label>
+                        <label for="email">Correo electrónico</label>
                         <div class="input-with-icon">
                             <i class="fas fa-envelope"></i>
-                            <input type="email" id="user-email" name="user-email" 
-                                   value="{{ user.email if edit_mode else '' }}" 
-                                   placeholder="Ej: usuario@empresa.com" required>
+                            <input type="email" id="email" name="email" 
+                                value="{{ user.email if edit_mode else '' }}" 
+                                placeholder="Ej: usuario@empresa.com" required>
                         </div>
                     </div>
                 </div>
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="user-role">Rol del usuario</label>
+                        <label for="nombre_completo">Nombre completo</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-id-card"></i>
+                            <input type="text" id="nombre_completo" name="nombre_completo" 
+                                value="{{ user.nombre_completo if edit_mode and user.nombre_completo else '' }}" 
+                                placeholder="Nombres y Apellidos" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="rol">Rol del usuario</label>
                         <div class="select-with-icon">
                             <i class="fas fa-user-tag"></i>
-                            <select id="user-role" name="user-role" required>
-                                <option value="" disabled selected>Seleccione un rol</option>
-                                <option value="admin" {{ 'selected' if edit_mode and user.role == 'admin' else '' }}>
+                            <select id="rol" name="rol" required>
+                                <option value="admin" {{ 'selected' if edit_mode and user.roles == 'admin' else '' }}>
                                     Administrador
                                 </option>
-                                <option value="analyst" {{ 'selected' if edit_mode and user.role == 'analyst' else '' }}>
+                                <option value="analyst" {{ 'selected' if edit_mode and user.roles == 'analyst' else '' }}>
                                     Analista
                                 </option>
-                                <option value="viewer" {{ 'selected' if edit_mode and user.role == 'viewer' else '' }}>
+                                <option value="viewer" {{ 'selected' if edit_mode and user.roles == 'viewer' else '' }}>
                                     Visualizador
                                 </option>
                             </select>
                         </div>
                     </div>
-                    
+                </div>
+                
+                <div class="form-row">
                     <div class="form-group">
-                        <label for="user-status">Estado</label>
+                        <label for="activo">Estado</label>
                         <div class="select-with-icon">
                             <i class="fas fa-circle"></i>
-                            <select id="user-status" name="user-status" required>
-                                <option value="active" {{ 'selected' if edit_mode and user.status == 'active' else '' }}>
+                            <select id="activo" name="activo" required>
+                                <option value="1" {{ 'selected' if edit_mode and user.activo else '' }}>
                                     Activo
                                 </option>
-                                <option value="inactive" {{ 'selected' if edit_mode and user.status == 'inactive' else '' }}>
+                                <option value="0" {{ 'selected' if edit_mode and not user.activo else '' }}>
                                     Inactivo
                                 </option>
                             </select>
                         </div>
                     </div>
-                </div>
-                
-                <div class="form-row">
+                    
+                    {% if not edit_mode %}
                     <div class="form-group">
-                        <label for="user-password">{{ 'Nueva ' if edit_mode else '' }}Contraseña</label>
+                        <label for="password">Contraseña</label>
                         <div class="input-with-icon password-field">
                             <i class="fas fa-lock"></i>
-                            <input type="password" id="user-password" name="user-password" placeholder="Mínimo 8 caracteres" required>
+                            <input type="password" id="password" name="password" placeholder="Mínimo 8 caracteres" required>
                             <button type="button" class="toggle-password" aria-label="Mostrar contraseña">
                                 <i class="fas fa-eye"></i>
                             </button>
                         </div>
-                        <div class="password-strength"></div>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                {% if edit_mode %}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="new_password">Nueva contraseña (dejar en blanco para no cambiar)</label>
+                        <div class="input-with-icon password-field">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="new_password" name="new_password" placeholder="Mínimo 8 caracteres">
+                            <button type="button" class="toggle-password" aria-label="Mostrar contraseña">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
+                {% endif %}
                 
                 <div class="form-actions">
                     <button type="submit" class="button button-primary">
@@ -122,4 +145,21 @@
         </div>
     </div>
 </div>
+
+<script>
+// Script para mostrar/ocultar contraseña
+document.querySelectorAll('.toggle-password').forEach(button => {
+    button.addEventListener('click', function() {
+        const input = this.previousElementSibling;
+        const icon = this.querySelector('i');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.replace('fa-eye-slash', 'fa-eye');
+        }
+    });
+});
+</script>
 {% endblock %}

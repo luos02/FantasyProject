@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, session, redirect, url_for, render_template
+from flask import Blueprint, request, session, redirect, url_for, render_template, flash
 from app.controllers.auth_controller import authenticate_user, register_user
 
 auth_bp = Blueprint('auth', __name__)
@@ -10,7 +10,8 @@ def login():
         password = request.form.get('password')
         
         if not username or not password:
-            return jsonify({"error": "Se requiere nombre de usuario y contraseña"}), 400
+            flash('Se requiere nombre de usuario y contraseña', 'error')
+            return redirect(url_for('auth.login'))
         
         user = authenticate_user(username, password)
         
@@ -19,9 +20,9 @@ def login():
             session['username'] = user.username
             return redirect(url_for('content.home'))
         else:
-            return jsonify({"error": "Credenciales inválidas"}), 401
+            flash('Credenciales inválidas', 'error')
+            return redirect(url_for('auth.login'))
     
-    # Si es GET, mostrar formulario de login
     return render_template('login.html')
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
@@ -33,19 +34,22 @@ def register():
         nombre_completo = request.form.get('nombre_completo')
         
         if not username or not email or not password:
-            return jsonify({"error": "Faltan campos requeridos"}), 400
+            flash('Faltan campos requeridos', 'error')
+            return redirect(url_for('auth.register'))
         
         user, message = register_user(username, email, password, nombre_completo)
         
         if user:
+            flash('Registro exitoso. Por favor inicia sesión.', 'success')
             return redirect(url_for('auth.login'))
         else:
-            return jsonify({"error": message}), 400
+            flash(message, 'error')
+            return redirect(url_for('auth.register'))
     
-    # Si es GET, mostrar formulario de registro
-    return render_template('login.html')
+    return render_template('register.html')  # Asume que tienes una plantilla register.html
 
 @auth_bp.route('/logout')
 def logout():
     session.clear()
+    flash('Has cerrado sesión correctamente', 'success')
     return redirect(url_for('auth.login'))
