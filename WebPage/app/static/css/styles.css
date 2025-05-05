@@ -225,6 +225,45 @@ body {
     min-height: calc(100vh - 110px);
 }
 
+/* Estilos para mensajes flash */
+.flash-messages {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 1000;
+    max-width: 400px;
+}
+
+.alert {
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.alert-success {
+    background-color: #edf7ed;
+    color: #2e7d32;
+}
+
+.alert-error {
+    background-color: #fdecea;
+    color: #d32f2f;
+}
+
+/* Estilos para la información del usuario */
+.user-info {
+    margin-right: 15px;
+    color: #555;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
 /* Responsive */
 @media (max-width: 992px) {
     .nav-menu-container {
