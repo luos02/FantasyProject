@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Plataforma{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/errors.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -39,6 +40,7 @@
                         </ul>
                     </li>
                     
+                    {% if session.get('user_role') in ['admin', 'analyst'] %}
                     <li class="nav-item dropdown">
                         <a href="#" class="nav-link">
                             <i class="fas fa-cog nav-icon"></i>
@@ -46,15 +48,22 @@
                             <i class="fas fa-chevron-down dropdown-icon"></i>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ url_for('content.subopcion5') }}" class="dropdown-link">Gestionar Usuarios</a></li>
+                            {% if session.get('user_role') == 'admin' %}
+                            <li><a href="{{ url_for('config.list_users') }}" class="dropdown-link">Gestionar Usuarios</a></li>
+                            {% endif %}
                             <li><a href="{{ url_for('content.subopcion6') }}" class="dropdown-link">Gestionar Modelo</a></li>
                             <li><a href="{{ url_for('content.subopcion2') }}" class="dropdown-link">Ver archivos subidos</a></li>
                         </ul>
                     </li>
+                    {% endif %}
                 </ul>
                 
                 <div class="nav-actions">
-                    <a href="{{ url_for('auth.login') }}" class="logout-btn">
+                    <span class="user-info">
+                        <i class="fas fa-user-circle"></i>
+                        {{ session.get('username') }} ({{ session.get('user_role') }})
+                    </span>
+                    <a href="{{ url_for('auth.logout') }}" class="logout-btn">
                         <i class="fas fa-sign-out-alt"></i>
                         <span>Cerrar sesión</span>
                     </a>
@@ -69,6 +78,20 @@
 
     <!-- Contenido principal -->
     <div class="container">
+        <!-- Mostrar mensajes flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            <i class="fas {% if category == 'error' %}fa-exclamation-circle{% else %}fa-check-circle{% endif %}"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
         <main class="content">
             {% block content %}{% endblock %}
         </main>

@@ -23,7 +23,7 @@
     <div class="card">
         <div class="user-management">
             <div class="user-actions">
-                <a href="{{ url_for('content.subopcion5_1') }}" class="button button-primary">
+                <a href="{{ url_for('config.add_user') }}" class="button button-primary">
                     <i class="fas fa-user-plus"></i> Agregar Usuario
                 </a>
             </div>
@@ -40,41 +40,94 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {% for user in users %}
                         <tr>
-                            <td>Juan Pérez</td>
-                            <td>juan@empresa.com</td>
-                            <td>Administrador</td>
-                            <td><span class="status-badge active">Activo</span></td>
+                            <td>
+                                {% if user.nombre_completo %}
+                                    {{ user.nombre_completo }}
+                                {% else %}
+                                    {{ user.username }}
+                                {% endif %}
+                            </td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.roles }}</td>
+                            <td>
+                                <span class="status-badge {{ 'active' if user.activo else 'inactive' }}">
+                                    {{ 'Activo' if user.activo else 'Inactivo' }}
+                                </span>
+                            </td>
                             <td class="actions">
-                                <button class="icon-button edit" title="Editar"><i class="fas fa-edit"></i></button>
-                                <button class="icon-button delete" title="Eliminar"><i class="fas fa-trash"></i></button>
+                                <a href="{{ url_for('config.edit_user', user_id=user.id) }}" class="icon-button edit" title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form action="{{ url_for('config.delete_user', user_id=user.id) }}" method="POST" style="display: inline;">
+                                    <button type="submit" class="icon-button delete" title="Eliminar">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
                             </td>
                         </tr>
-                        <tr>
-                            <td>María García</td>
-                            <td>maria@empresa.com</td>
-                            <td>Analista</td>
-                            <td><span class="status-badge active">Activo</span></td>
-                            <td class="actions">
-                                <button class="icon-button edit" title="Editar"><i class="fas fa-edit"></i></button>
-                                <button class="icon-button delete" title="Eliminar"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Carlos López</td>
-                            <td>carlos@empresa.com</td>
-                            <td>Visualizador</td>
-                            <td><span class="status-badge inactive">Inactivo</span></td>
-                            <td class="actions">
-                                <button class="icon-button edit" title="Editar"><i class="fas fa-edit"></i></button>
-                                <button class="icon-button delete" title="Eliminar"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-    
 </div>
+
+<div id="customConfirmModal" class="confirm-modal">
+    <div class="confirm-modal-content">
+        <div class="confirm-modal-header">
+            <h3>Confirmar acción</h3>
+        </div>
+        <div class="confirm-modal-body">
+            <p>¿Estás seguro que deseas eliminar este usuario?</p>
+        </div>
+        <div class="confirm-modal-footer">
+            <button id="confirmCancel" class="button button-secondary">Cancelar</button>
+            <button id="confirmOk" class="button button-danger">Eliminar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Sistema de confirmación personalizado
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('customConfirmModal');
+        const confirmOk = document.getElementById('confirmOk');
+        const confirmCancel = document.getElementById('confirmCancel');
+        let currentForm = null;
+    
+        // Reemplazar todos los confirm nativos
+        document.querySelectorAll('.delete').forEach(button => {
+            button.onclick = function(e) {
+                e.preventDefault();
+                currentForm = this.closest('form');
+                modal.style.display = 'flex';
+            };
+        });
+    
+        // Botón OK del modal
+        confirmOk.onclick = function() {
+            modal.style.display = 'none';
+            if (currentForm) {
+                currentForm.submit();
+            }
+        };
+    
+        // Botón Cancelar del modal
+        confirmCancel.onclick = function() {
+            modal.style.display = 'none';
+            currentForm = null;
+        };
+    
+        // Cerrar modal haciendo clic fuera del contenido
+        modal.onclick = function(e) {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+                currentForm = null;
+            }
+        };
+    });
+</script>
 {% endblock %}
