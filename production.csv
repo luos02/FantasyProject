@@ -1,0 +1,451 @@
+production_date,plate_type_id,mold_id,good_units,defective_units,machine_hours,operator_id,notes
+2025-02-07,1,1,493,23,7.69,OP-3,Cambio de material
+2025-02-07,2,1,529,20,7.53,OP-3,Ajuste de temperatura
+2025-02-07,3,2,491,19,7.03,OP-2,Cambio de material
+2025-02-07,4,3,487,11,6.27,OP-4,Ajuste de temperatura
+2025-02-07,5,4,754,16,6.2,OP-3,Mantenimiento rutinario
+2025-02-08,1,1,520,25,7.46,OP-5,Mantenimiento rutinario
+2025-02-08,2,1,463,9,7.41,OP-4,
+2025-02-08,3,2,471,13,8.42,OP-5,Cambio de material
+2025-02-08,4,3,520,21,8.03,OP-1,Mantenimiento rutinario
+2025-02-08,5,4,794,29,7.68,OP-3,Ajuste de temperatura
+2025-02-09,1,1,487,9,8.36,OP-3,Cambio de material
+2025-02-09,2,1,465,17,6.16,OP-2,Cambio de material
+2025-02-09,3,2,460,14,8.45,OP-5,Cambio de material
+2025-02-09,4,3,511,16,6.67,OP-3,Mantenimiento rutinario
+2025-02-09,5,4,791,35,6.49,OP-5,Ajuste de temperatura
+2025-02-10,1,1,537,8,7.17,OP-3,Ajuste de temperatura
+2025-02-10,2,1,532,23,8.03,OP-5,Ajuste de temperatura
+2025-02-10,3,2,525,12,8.36,OP-2,Ajuste de temperatura
+2025-02-10,4,3,535,8,6.23,OP-4,Cambio de material
+2025-02-10,5,4,787,20,7.77,OP-3,Mantenimiento rutinario
+2025-02-11,1,1,471,5,7.04,OP-4,Mantenimiento rutinario
+2025-02-11,2,1,518,16,6.15,OP-3,Mantenimiento rutinario
+2025-02-11,3,2,542,14,6.37,OP-3,
+2025-02-11,4,3,535,26,7.04,OP-3,Ajuste de temperatura
+2025-02-11,5,4,862,38,7.86,OP-4,Cambio de material
+2025-02-12,1,1,495,24,6.71,OP-2,Mantenimiento rutinario
+2025-02-12,2,1,537,5,6.01,OP-3,Mantenimiento rutinario
+2025-02-12,3,2,543,14,7.95,OP-3,
+2025-02-12,4,3,494,16,6.6,OP-2,Ajuste de temperatura
+2025-02-12,5,4,752,31,8.03,OP-4,Mantenimiento rutinario
+2025-02-13,1,1,497,8,7.87,OP-5,Cambio de material
+2025-02-13,2,1,504,16,6.94,OP-2,
+2025-02-13,3,2,493,13,7.19,OP-3,Cambio de material
+2025-02-13,4,3,528,8,8.21,OP-4,Ajuste de temperatura
+2025-02-13,5,4,759,17,6.76,OP-4,Cambio de material
+2025-02-14,1,1,475,18,8.36,OP-4,
+2025-02-14,2,1,518,20,7.43,OP-4,Mantenimiento rutinario
+2025-02-14,3,2,509,21,8.46,OP-5,Cambio de material
+2025-02-14,4,3,496,5,6.35,OP-1,Ajuste de temperatura
+2025-02-14,5,4,871,18,6.04,OP-3,Cambio de material
+2025-02-15,1,1,502,8,7.76,OP-4,Cambio de material
+2025-02-15,2,1,524,24,8.29,OP-4,Mantenimiento rutinario
+2025-02-15,3,2,506,13,7.37,OP-5,
+2025-02-15,4,3,511,11,7.99,OP-1,Mantenimiento rutinario
+2025-02-15,5,4,794,23,7.35,OP-3,Mantenimiento rutinario
+2025-02-16,1,1,521,6,8.06,OP-1,Mantenimiento rutinario
+2025-02-16,2,1,456,11,8.2,OP-2,Ajuste de temperatura
+2025-02-16,3,2,524,9,6.82,OP-4,Cambio de material
+2025-02-16,4,3,500,24,8.1,OP-1,Cambio de material
+2025-02-16,5,4,821,38,8.13,OP-4,Cambio de material
+2025-02-17,1,1,482,18,7.03,OP-1,Mantenimiento rutinario
+2025-02-17,2,1,454,5,8.29,OP-4,Ajuste de temperatura
+2025-02-17,3,2,457,19,7.13,OP-4,
+2025-02-17,4,3,473,8,7.9,OP-5,Cambio de material
+2025-02-17,5,4,826,10,7.26,OP-1,
+2025-02-18,1,1,532,16,8.39,OP-5,Ajuste de temperatura
+2025-02-18,2,1,456,7,7.07,OP-4,Cambio de material
+2025-02-18,3,2,495,24,6.01,OP-5,Ajuste de temperatura
+2025-02-18,4,3,527,16,7.96,OP-4,Mantenimiento rutinario
+2025-02-18,5,4,838,39,6.26,OP-3,Mantenimiento rutinario
+2025-02-19,1,1,457,4,7.79,OP-1,Cambio de material
+2025-02-19,2,1,520,19,8.11,OP-4,Mantenimiento rutinario
+2025-02-19,3,2,532,17,7.42,OP-4,Cambio de material
+2025-02-19,4,3,484,5,7.39,OP-3,Cambio de material
+2025-02-19,5,4,788,38,6.24,OP-1,Ajuste de temperatura
+2025-02-20,1,1,456,12,6.25,OP-4,Cambio de material
+2025-02-20,2,1,505,10,6.57,OP-5,
+2025-02-20,3,2,539,9,6.33,OP-2,
+2025-02-20,4,3,469,11,8.0,OP-3,Ajuste de temperatura
+2025-02-20,5,4,759,35,7.57,OP-5,Ajuste de temperatura
+2025-02-21,1,1,515,17,7.64,OP-3,Cambio de material
+2025-02-21,2,1,509,16,7.92,OP-1,
+2025-02-21,3,2,452,9,7.68,OP-5,Mantenimiento rutinario
+2025-02-21,4,3,535,9,7.04,OP-3,
+2025-02-21,5,4,773,10,7.4,OP-3,Mantenimiento rutinario
+2025-02-22,1,1,546,7,6.02,OP-5,Cambio de material
+2025-02-22,2,1,454,11,6.65,OP-4,Mantenimiento rutinario
+2025-02-22,3,2,452,19,7.28,OP-5,Mantenimiento rutinario
+2025-02-22,4,3,503,5,7.72,OP-4,Ajuste de temperatura
+2025-02-22,5,4,829,29,6.37,OP-3,
+2025-02-23,1,1,452,14,8.02,OP-4,
+2025-02-23,2,1,492,8,7.29,OP-2,
+2025-02-23,3,2,478,7,7.57,OP-1,Ajuste de temperatura
+2025-02-23,4,3,519,19,7.62,OP-2,Cambio de material
+2025-02-23,5,4,840,13,7.14,OP-2,
+2025-02-24,1,1,507,6,6.07,OP-4,Cambio de material
+2025-02-24,2,1,488,21,7.56,OP-5,
+2025-02-24,3,2,473,12,8.35,OP-4,Mantenimiento rutinario
+2025-02-24,4,3,471,10,6.65,OP-1,
+2025-02-24,5,4,802,22,7.47,OP-2,Cambio de material
+2025-02-25,1,1,482,16,6.79,OP-2,Cambio de material
+2025-02-25,2,1,536,11,7.17,OP-4,
+2025-02-25,3,2,518,12,8.32,OP-5,Cambio de material
+2025-02-25,4,3,490,18,6.47,OP-4,
+2025-02-25,5,4,864,12,8.26,OP-4,Mantenimiento rutinario
+2025-02-26,1,1,450,8,6.59,OP-4,Mantenimiento rutinario
+2025-02-26,2,1,512,18,7.41,OP-1,Cambio de material
+2025-02-26,3,2,549,15,7.02,OP-3,
+2025-02-26,4,3,496,23,7.99,OP-4,Mantenimiento rutinario
+2025-02-26,5,4,824,13,6.48,OP-4,Ajuste de temperatura
+2025-02-27,1,1,521,24,6.31,OP-2,Cambio de material
+2025-02-27,2,1,544,18,6.63,OP-2,Cambio de material
+2025-02-27,3,2,472,4,7.9,OP-5,Ajuste de temperatura
+2025-02-27,4,3,485,10,6.53,OP-3,Mantenimiento rutinario
+2025-02-27,5,4,722,26,6.16,OP-3,
+2025-02-28,1,1,523,25,8.22,OP-1,Cambio de material
+2025-02-28,2,1,514,17,6.27,OP-2,Mantenimiento rutinario
+2025-02-28,3,2,501,15,6.19,OP-1,Mantenimiento rutinario
+2025-02-28,4,3,451,21,7.03,OP-3,
+2025-02-28,5,4,750,32,6.01,OP-5,Ajuste de temperatura
+2025-03-01,1,1,536,8,7.01,OP-2,Cambio de material
+2025-03-01,2,1,517,11,7.7,OP-2,Ajuste de temperatura
+2025-03-01,3,2,537,16,7.29,OP-4,Cambio de material
+2025-03-01,4,3,492,15,6.98,OP-4,Ajuste de temperatura
+2025-03-01,5,4,781,32,6.35,OP-5,Mantenimiento rutinario
+2025-03-02,1,1,481,20,7.41,OP-3,Mantenimiento rutinario
+2025-03-02,2,1,526,19,7.41,OP-2,Cambio de material
+2025-03-02,3,2,516,19,6.81,OP-5,Cambio de material
+2025-03-02,4,3,452,5,6.35,OP-2,Mantenimiento rutinario
+2025-03-02,5,4,768,10,8.35,OP-4,Mantenimiento rutinario
+2025-03-03,1,1,524,16,7.1,OP-1,Ajuste de temperatura
+2025-03-03,2,1,526,23,6.51,OP-5,Mantenimiento rutinario
+2025-03-03,3,2,468,19,7.31,OP-1,Ajuste de temperatura
+2025-03-03,4,3,516,18,6.35,OP-5,Ajuste de temperatura
+2025-03-03,5,4,741,29,7.85,OP-2,
+2025-03-04,1,1,460,20,8.11,OP-3,Ajuste de temperatura
+2025-03-04,2,1,536,5,6.67,OP-2,Ajuste de temperatura
+2025-03-04,3,2,533,10,7.34,OP-4,Mantenimiento rutinario
+2025-03-04,4,3,512,6,6.7,OP-4,Mantenimiento rutinario
+2025-03-04,5,4,869,22,7.51,OP-1,Ajuste de temperatura
+2025-03-05,1,1,475,15,7.6,OP-4,Ajuste de temperatura
+2025-03-05,2,1,518,25,7.48,OP-5,Cambio de material
+2025-03-05,3,2,473,19,7.35,OP-4,Ajuste de temperatura
+2025-03-05,4,3,549,13,7.42,OP-3,Ajuste de temperatura
+2025-03-05,5,4,785,16,6.23,OP-1,Mantenimiento rutinario
+2025-03-06,1,1,496,13,7.02,OP-1,
+2025-03-06,2,1,533,21,6.21,OP-5,
+2025-03-06,3,2,485,6,7.99,OP-4,Mantenimiento rutinario
+2025-03-06,4,3,525,24,7.28,OP-4,Mantenimiento rutinario
+2025-03-06,5,4,779,14,7.48,OP-5,Mantenimiento rutinario
+2025-03-07,1,1,479,5,6.69,OP-5,
+2025-03-07,2,1,502,7,8.24,OP-5,Ajuste de temperatura
+2025-03-07,3,2,461,21,7.6,OP-5,Cambio de material
+2025-03-07,4,3,466,17,7.68,OP-4,Cambio de material
+2025-03-07,5,4,758,31,6.59,OP-2,
+2025-03-08,1,1,544,14,6.44,OP-5,Ajuste de temperatura
+2025-03-08,2,1,541,18,6.67,OP-4,Cambio de material
+2025-03-08,3,2,495,23,7.82,OP-5,Cambio de material
+2025-03-08,4,3,537,8,7.03,OP-2,Ajuste de temperatura
+2025-03-08,5,4,727,16,7.74,OP-3,Cambio de material
+2025-03-09,1,1,454,6,7.85,OP-4,Ajuste de temperatura
+2025-03-09,2,1,542,21,8.01,OP-2,Ajuste de temperatura
+2025-03-09,3,2,466,9,6.86,OP-3,
+2025-03-09,4,3,504,6,7.52,OP-2,Mantenimiento rutinario
+2025-03-09,5,4,850,32,7.18,OP-4,Mantenimiento rutinario
+2025-03-10,1,1,524,6,6.28,OP-2,Cambio de material
+2025-03-10,2,1,466,16,7.17,OP-1,Cambio de material
+2025-03-10,3,2,469,10,6.11,OP-1,Ajuste de temperatura
+2025-03-10,4,3,547,17,7.31,OP-5,Mantenimiento rutinario
+2025-03-10,5,4,815,14,6.84,OP-3,Mantenimiento rutinario
+2025-03-11,1,1,455,14,6.86,OP-2,
+2025-03-11,2,1,527,17,7.27,OP-2,Mantenimiento rutinario
+2025-03-11,3,2,547,6,8.25,OP-2,Ajuste de temperatura
+2025-03-11,4,3,472,18,8.15,OP-2,
+2025-03-11,5,4,764,20,6.27,OP-1,Ajuste de temperatura
+2025-03-12,1,1,541,10,6.06,OP-1,Ajuste de temperatura
+2025-03-12,2,1,491,18,7.14,OP-5,Mantenimiento rutinario
+2025-03-12,3,2,531,23,8.45,OP-3,Mantenimiento rutinario
+2025-03-12,4,3,468,22,6.9,OP-3,Mantenimiento rutinario
+2025-03-12,5,4,766,34,6.63,OP-5,Cambio de material
+2025-03-13,1,1,533,26,7.24,OP-5,Ajuste de temperatura
+2025-03-13,2,1,455,5,8.32,OP-4,Cambio de material
+2025-03-13,3,2,451,13,6.81,OP-1,Ajuste de temperatura
+2025-03-13,4,3,485,13,7.89,OP-2,Mantenimiento rutinario
+2025-03-13,5,4,795,10,7.0,OP-4,Ajuste de temperatura
+2025-03-14,1,1,545,10,7.86,OP-4,Mantenimiento rutinario
+2025-03-14,2,1,485,13,6.86,OP-2,Mantenimiento rutinario
+2025-03-14,3,2,524,24,6.01,OP-3,Ajuste de temperatura
+2025-03-14,4,3,541,6,7.7,OP-3,
+2025-03-14,5,4,743,32,7.19,OP-4,Cambio de material
+2025-03-15,1,1,462,7,7.8,OP-2,Ajuste de temperatura
+2025-03-15,2,1,477,6,8.06,OP-3,Cambio de material
+2025-03-15,3,2,516,15,6.67,OP-3,Ajuste de temperatura
+2025-03-15,4,3,477,19,8.03,OP-2,Mantenimiento rutinario
+2025-03-15,5,4,789,9,7.87,OP-2,
+2025-03-16,1,1,463,16,7.06,OP-1,Mantenimiento rutinario
+2025-03-16,2,1,473,11,6.78,OP-3,
+2025-03-16,3,2,500,5,8.05,OP-5,
+2025-03-16,4,3,482,20,6.62,OP-2,Mantenimiento rutinario
+2025-03-16,5,4,780,28,7.79,OP-2,Mantenimiento rutinario
+2025-03-17,1,1,469,23,8.12,OP-3,Ajuste de temperatura
+2025-03-17,2,1,473,21,7.39,OP-3,Cambio de material
+2025-03-17,3,2,499,9,8.08,OP-3,Mantenimiento rutinario
+2025-03-17,4,3,451,4,6.95,OP-4,Ajuste de temperatura
+2025-03-17,5,4,764,34,6.32,OP-1,Cambio de material
+2025-03-18,1,1,467,12,7.32,OP-1,Mantenimiento rutinario
+2025-03-18,2,1,475,9,6.72,OP-5,Ajuste de temperatura
+2025-03-18,3,2,493,18,7.67,OP-4,
+2025-03-18,4,3,495,22,8.14,OP-4,
+2025-03-18,5,4,846,32,8.43,OP-5,
+2025-03-19,1,1,548,14,7.29,OP-2,Ajuste de temperatura
+2025-03-19,2,1,477,6,6.98,OP-2,
+2025-03-19,3,2,470,20,6.05,OP-2,Mantenimiento rutinario
+2025-03-19,4,3,512,18,7.24,OP-4,Mantenimiento rutinario
+2025-03-19,5,4,875,10,6.11,OP-3,
+2025-03-20,1,1,469,6,6.93,OP-4,Mantenimiento rutinario
+2025-03-20,2,1,512,9,6.59,OP-4,Cambio de material
+2025-03-20,3,2,479,6,7.99,OP-2,Cambio de material
+2025-03-20,4,3,453,20,8.45,OP-2,Cambio de material
+2025-03-20,5,4,869,23,8.26,OP-1,Mantenimiento rutinario
+2025-03-21,1,1,485,19,8.34,OP-2,Mantenimiento rutinario
+2025-03-21,2,1,527,14,8.39,OP-3,Mantenimiento rutinario
+2025-03-21,3,2,486,23,8.42,OP-2,Cambio de material
+2025-03-21,4,3,475,8,6.59,OP-2,Ajuste de temperatura
+2025-03-21,5,4,865,13,6.86,OP-3,Cambio de material
+2025-03-22,1,1,508,22,6.9,OP-5,Mantenimiento rutinario
+2025-03-22,2,1,495,5,8.48,OP-5,Cambio de material
+2025-03-22,3,2,506,7,6.62,OP-4,
+2025-03-22,4,3,489,9,7.1,OP-1,Cambio de material
+2025-03-22,5,4,782,8,8.32,OP-1,
+2025-03-23,1,1,521,10,7.52,OP-5,
+2025-03-23,2,1,507,13,7.05,OP-2,
+2025-03-23,3,2,518,20,7.3,OP-1,Ajuste de temperatura
+2025-03-23,4,3,535,6,6.67,OP-4,Ajuste de temperatura
+2025-03-23,5,4,796,14,8.1,OP-4,
+2025-03-24,1,1,493,10,8.32,OP-3,Ajuste de temperatura
+2025-03-24,2,1,494,15,7.02,OP-2,Ajuste de temperatura
+2025-03-24,3,2,526,17,6.77,OP-1,Ajuste de temperatura
+2025-03-24,4,3,512,15,8.14,OP-4,Cambio de material
+2025-03-24,5,4,849,12,8.29,OP-2,Ajuste de temperatura
+2025-03-25,1,1,536,17,6.7,OP-3,Mantenimiento rutinario
+2025-03-25,2,1,529,11,7.85,OP-2,Ajuste de temperatura
+2025-03-25,3,2,468,6,7.55,OP-3,Ajuste de temperatura
+2025-03-25,4,3,501,9,8.3,OP-3,Mantenimiento rutinario
+2025-03-25,5,4,851,32,7.5,OP-3,Ajuste de temperatura
+2025-03-26,1,1,456,10,6.11,OP-5,Cambio de material
+2025-03-26,2,1,470,20,6.01,OP-4,Cambio de material
+2025-03-26,3,2,531,9,6.48,OP-4,Ajuste de temperatura
+2025-03-26,4,3,481,7,7.74,OP-5,Cambio de material
+2025-03-26,5,4,819,36,7.91,OP-5,Cambio de material
+2025-03-27,1,1,501,11,6.65,OP-3,Mantenimiento rutinario
+2025-03-27,2,1,451,10,6.96,OP-1,Cambio de material
+2025-03-27,3,2,488,10,6.57,OP-1,Cambio de material
+2025-03-27,4,3,485,12,6.95,OP-4,Ajuste de temperatura
+2025-03-27,5,4,755,32,6.1,OP-1,Ajuste de temperatura
+2025-03-28,1,1,510,9,7.54,OP-5,Cambio de material
+2025-03-28,2,1,488,18,6.56,OP-3,Mantenimiento rutinario
+2025-03-28,3,2,526,9,6.13,OP-1,Ajuste de temperatura
+2025-03-28,4,3,527,22,6.17,OP-2,Mantenimiento rutinario
+2025-03-28,5,4,782,21,6.03,OP-2,Mantenimiento rutinario
+2025-03-29,1,1,483,7,6.16,OP-2,Mantenimiento rutinario
+2025-03-29,2,1,494,14,6.28,OP-1,Ajuste de temperatura
+2025-03-29,3,2,491,22,7.67,OP-5,Ajuste de temperatura
+2025-03-29,4,3,469,7,6.78,OP-3,Cambio de material
+2025-03-29,5,4,752,25,6.46,OP-1,Ajuste de temperatura
+2025-03-30,1,1,546,12,6.67,OP-3,Cambio de material
+2025-03-30,2,1,492,18,7.42,OP-2,Cambio de material
+2025-03-30,3,2,530,13,6.24,OP-3,Ajuste de temperatura
+2025-03-30,4,3,528,24,6.32,OP-3,Mantenimiento rutinario
+2025-03-30,5,4,720,30,7.63,OP-4,Cambio de material
+2025-03-31,1,1,545,10,6.4,OP-4,Ajuste de temperatura
+2025-03-31,2,1,451,19,6.24,OP-3,Mantenimiento rutinario
+2025-03-31,3,2,474,16,6.82,OP-1,Cambio de material
+2025-03-31,4,3,490,23,6.82,OP-5,Mantenimiento rutinario
+2025-03-31,5,4,781,32,6.05,OP-2,Mantenimiento rutinario
+2025-04-01,1,1,482,5,8.17,OP-5,Ajuste de temperatura
+2025-04-01,2,1,475,5,6.86,OP-1,Ajuste de temperatura
+2025-04-01,3,2,533,10,6.89,OP-1,Cambio de material
+2025-04-01,4,3,515,5,6.3,OP-5,
+2025-04-01,5,4,796,34,7.82,OP-5,Ajuste de temperatura
+2025-04-02,1,1,466,22,6.63,OP-3,Mantenimiento rutinario
+2025-04-02,2,1,518,17,8.32,OP-3,Ajuste de temperatura
+2025-04-02,3,2,535,26,8.22,OP-1,
+2025-04-02,4,3,508,13,7.61,OP-1,
+2025-04-02,5,4,861,9,6.16,OP-1,Cambio de material
+2025-04-03,1,1,504,19,6.95,OP-4,Mantenimiento rutinario
+2025-04-03,2,1,492,17,7.25,OP-5,
+2025-04-03,3,2,522,17,7.8,OP-4,Ajuste de temperatura
+2025-04-03,4,3,548,16,8.08,OP-4,
+2025-04-03,5,4,871,12,8.5,OP-3,Ajuste de temperatura
+2025-04-04,1,1,465,12,7.64,OP-2,Ajuste de temperatura
+2025-04-04,2,1,494,13,7.8,OP-2,
+2025-04-04,3,2,532,17,6.65,OP-5,
+2025-04-04,4,3,507,7,7.43,OP-2,Ajuste de temperatura
+2025-04-04,5,4,734,11,8.05,OP-2,Mantenimiento rutinario
+2025-04-05,1,1,514,7,7.46,OP-4,Ajuste de temperatura
+2025-04-05,2,1,546,14,7.85,OP-1,Cambio de material
+2025-04-05,3,2,488,9,7.35,OP-3,Ajuste de temperatura
+2025-04-05,4,3,512,22,7.6,OP-1,Mantenimiento rutinario
+2025-04-05,5,4,837,34,7.31,OP-2,Ajuste de temperatura
+2025-04-06,1,1,503,22,7.6,OP-3,Cambio de material
+2025-04-06,2,1,517,25,8.33,OP-5,Mantenimiento rutinario
+2025-04-06,3,2,534,6,8.27,OP-2,Cambio de material
+2025-04-06,4,3,453,9,8.32,OP-1,Mantenimiento rutinario
+2025-04-06,5,4,754,9,7.03,OP-3,Ajuste de temperatura
+2025-04-07,1,1,451,12,7.96,OP-1,
+2025-04-07,2,1,483,18,6.24,OP-4,Ajuste de temperatura
+2025-04-07,3,2,489,19,7.41,OP-5,Mantenimiento rutinario
+2025-04-07,4,3,451,8,7.14,OP-2,Cambio de material
+2025-04-07,5,4,729,23,6.16,OP-4,
+2025-04-08,1,1,536,13,7.46,OP-2,Mantenimiento rutinario
+2025-04-08,2,1,466,11,6.76,OP-3,Mantenimiento rutinario
+2025-04-08,3,2,547,19,6.53,OP-5,Mantenimiento rutinario
+2025-04-08,4,3,482,16,7.59,OP-1,Cambio de material
+2025-04-08,5,4,842,31,8.37,OP-3,Cambio de material
+2025-04-09,1,1,511,13,7.03,OP-1,Ajuste de temperatura
+2025-04-09,2,1,475,13,6.71,OP-2,Mantenimiento rutinario
+2025-04-09,3,2,540,10,7.18,OP-4,Ajuste de temperatura
+2025-04-09,4,3,460,21,7.94,OP-1,Mantenimiento rutinario
+2025-04-09,5,4,876,29,6.39,OP-2,Mantenimiento rutinario
+2025-04-10,1,1,526,9,6.12,OP-5,
+2025-04-10,2,1,482,21,8.15,OP-2,
+2025-04-10,3,2,486,23,6.43,OP-1,Cambio de material
+2025-04-10,4,3,468,8,7.7,OP-3,Cambio de material
+2025-04-10,5,4,741,28,7.3,OP-4,Ajuste de temperatura
+2025-04-11,1,1,544,17,7.46,OP-1,
+2025-04-11,2,1,474,11,7.77,OP-1,Cambio de material
+2025-04-11,3,2,491,17,7.25,OP-4,Mantenimiento rutinario
+2025-04-11,4,3,452,13,6.56,OP-1,Cambio de material
+2025-04-11,5,4,797,10,7.89,OP-1,
+2025-04-12,1,1,457,12,8.49,OP-4,
+2025-04-12,2,1,470,11,6.7,OP-5,Ajuste de temperatura
+2025-04-12,3,2,543,10,7.47,OP-5,
+2025-04-12,4,3,531,5,8.02,OP-1,
+2025-04-12,5,4,832,34,7.13,OP-3,
+2025-04-13,1,1,506,25,8.22,OP-4,Mantenimiento rutinario
+2025-04-13,2,1,500,18,6.69,OP-2,Cambio de material
+2025-04-13,3,2,501,23,6.66,OP-4,Ajuste de temperatura
+2025-04-13,4,3,526,14,6.59,OP-4,Cambio de material
+2025-04-13,5,4,760,24,7.15,OP-5,Cambio de material
+2025-04-14,1,1,473,6,6.65,OP-2,Cambio de material
+2025-04-14,2,1,505,17,8.42,OP-1,Ajuste de temperatura
+2025-04-14,3,2,528,10,7.27,OP-4,Cambio de material
+2025-04-14,4,3,499,19,8.25,OP-1,Ajuste de temperatura
+2025-04-14,5,4,811,20,7.46,OP-1,Mantenimiento rutinario
+2025-04-15,1,1,539,23,7.85,OP-2,
+2025-04-15,2,1,504,23,8.35,OP-5,
+2025-04-15,3,2,458,9,7.54,OP-3,Ajuste de temperatura
+2025-04-15,4,3,526,19,6.55,OP-3,Cambio de material
+2025-04-15,5,4,848,41,7.57,OP-5,
+2025-04-16,1,1,488,16,7.26,OP-3,Cambio de material
+2025-04-16,2,1,483,12,8.16,OP-5,Ajuste de temperatura
+2025-04-16,3,2,478,10,6.51,OP-3,Mantenimiento rutinario
+2025-04-16,4,3,456,8,6.24,OP-3,Ajuste de temperatura
+2025-04-16,5,4,800,35,8.32,OP-1,Ajuste de temperatura
+2025-04-17,1,1,521,15,6.44,OP-2,Cambio de material
+2025-04-17,2,1,497,6,7.49,OP-5,Mantenimiento rutinario
+2025-04-17,3,2,507,18,6.47,OP-2,Ajuste de temperatura
+2025-04-17,4,3,498,23,8.32,OP-4,Ajuste de temperatura
+2025-04-17,5,4,748,36,7.84,OP-3,
+2025-04-18,1,1,492,12,7.88,OP-3,
+2025-04-18,2,1,477,16,7.48,OP-1,
+2025-04-18,3,2,534,9,7.05,OP-3,Cambio de material
+2025-04-18,4,3,507,12,7.17,OP-4,
+2025-04-18,5,4,777,33,7.35,OP-4,Cambio de material
+2025-04-19,1,1,487,18,8.1,OP-2,Mantenimiento rutinario
+2025-04-19,2,1,452,17,8.32,OP-4,Mantenimiento rutinario
+2025-04-19,3,2,469,5,8.16,OP-3,Ajuste de temperatura
+2025-04-19,4,3,491,11,7.44,OP-5,Ajuste de temperatura
+2025-04-19,5,4,755,33,6.18,OP-1,
+2025-04-20,1,1,476,22,7.14,OP-4,Ajuste de temperatura
+2025-04-20,2,1,470,4,7.02,OP-5,Ajuste de temperatura
+2025-04-20,3,2,457,13,7.73,OP-5,
+2025-04-20,4,3,531,8,6.4,OP-5,Mantenimiento rutinario
+2025-04-20,5,4,857,28,7.03,OP-4,Cambio de material
+2025-04-21,1,1,490,13,8.38,OP-1,Ajuste de temperatura
+2025-04-21,2,1,527,15,7.81,OP-1,Ajuste de temperatura
+2025-04-21,3,2,472,6,6.36,OP-4,Ajuste de temperatura
+2025-04-21,4,3,540,12,6.77,OP-5,Cambio de material
+2025-04-21,5,4,840,26,7.21,OP-2,Ajuste de temperatura
+2025-04-22,1,1,497,20,7.66,OP-2,Cambio de material
+2025-04-22,2,1,477,9,6.42,OP-5,Mantenimiento rutinario
+2025-04-22,3,2,543,15,6.62,OP-3,Mantenimiento rutinario
+2025-04-22,4,3,516,18,7.22,OP-3,
+2025-04-22,5,4,806,13,7.59,OP-2,
+2025-04-23,1,1,457,22,6.31,OP-2,
+2025-04-23,2,1,452,17,6.13,OP-2,Cambio de material
+2025-04-23,3,2,525,22,7.42,OP-3,Ajuste de temperatura
+2025-04-23,4,3,471,7,8.48,OP-4,Cambio de material
+2025-04-23,5,4,765,28,8.01,OP-4,Mantenimiento rutinario
+2025-04-24,1,1,473,18,7.51,OP-2,Mantenimiento rutinario
+2025-04-24,2,1,492,7,6.5,OP-5,Ajuste de temperatura
+2025-04-24,3,2,458,12,7.95,OP-1,
+2025-04-24,4,3,520,25,8.48,OP-5,
+2025-04-24,5,4,728,19,7.68,OP-4,Cambio de material
+2025-04-25,1,1,510,22,7.03,OP-3,Cambio de material
+2025-04-25,2,1,470,13,8.28,OP-4,Cambio de material
+2025-04-25,3,2,481,21,7.72,OP-2,Mantenimiento rutinario
+2025-04-25,4,3,494,22,8.42,OP-5,Ajuste de temperatura
+2025-04-25,5,4,837,23,6.94,OP-1,Cambio de material
+2025-04-26,1,1,541,9,8.11,OP-2,Cambio de material
+2025-04-26,2,1,465,20,7.11,OP-5,Ajuste de temperatura
+2025-04-26,3,2,518,17,6.7,OP-2,
+2025-04-26,4,3,461,5,8.26,OP-2,Mantenimiento rutinario
+2025-04-26,5,4,739,28,6.63,OP-4,Cambio de material
+2025-04-27,1,1,461,14,8.07,OP-5,Mantenimiento rutinario
+2025-04-27,2,1,537,15,6.75,OP-2,Ajuste de temperatura
+2025-04-27,3,2,508,23,6.43,OP-2,
+2025-04-27,4,3,540,10,6.16,OP-5,Ajuste de temperatura
+2025-04-27,5,4,841,38,6.58,OP-2,Mantenimiento rutinario
+2025-04-28,1,1,507,8,6.94,OP-4,
+2025-04-28,2,1,491,12,7.22,OP-2,
+2025-04-28,3,2,493,18,6.09,OP-4,Ajuste de temperatura
+2025-04-28,4,3,492,23,7.71,OP-4,Mantenimiento rutinario
+2025-04-28,5,4,829,39,7.5,OP-5,Mantenimiento rutinario
+2025-04-29,1,1,535,21,7.36,OP-5,Cambio de material
+2025-04-29,2,1,516,19,8.34,OP-1,Ajuste de temperatura
+2025-04-29,3,2,505,14,7.78,OP-5,Mantenimiento rutinario
+2025-04-29,4,3,473,22,7.23,OP-1,Mantenimiento rutinario
+2025-04-29,5,4,824,18,7.78,OP-5,
+2025-04-30,1,1,452,21,7.58,OP-3,
+2025-04-30,2,1,533,16,8.23,OP-2,Cambio de material
+2025-04-30,3,2,472,22,7.72,OP-5,Mantenimiento rutinario
+2025-04-30,4,3,527,6,7.99,OP-4,
+2025-04-30,5,4,737,26,6.96,OP-4,
+2025-05-01,1,1,525,23,6.35,OP-2,Ajuste de temperatura
+2025-05-01,2,1,520,21,6.87,OP-4,Ajuste de temperatura
+2025-05-01,3,2,484,13,8.17,OP-3,
+2025-05-01,4,3,535,14,6.17,OP-5,
+2025-05-01,5,4,836,11,7.83,OP-1,Ajuste de temperatura
+2025-05-02,1,1,450,12,7.81,OP-3,Cambio de material
+2025-05-02,2,1,536,19,6.67,OP-3,
+2025-05-02,3,2,510,18,7.05,OP-3,Mantenimiento rutinario
+2025-05-02,4,3,534,25,8.25,OP-3,Cambio de material
+2025-05-02,5,4,833,36,7.03,OP-3,Cambio de material
+2025-05-03,1,1,513,23,7.57,OP-3,Cambio de material
+2025-05-03,2,1,484,22,6.68,OP-1,Cambio de material
+2025-05-03,3,2,459,9,7.9,OP-5,Mantenimiento rutinario
+2025-05-03,4,3,508,19,7.22,OP-3,Cambio de material
+2025-05-03,5,4,776,37,7.98,OP-4,Ajuste de temperatura
+2025-05-04,1,1,460,19,7.19,OP-5,Mantenimiento rutinario
+2025-05-04,2,1,457,11,8.08,OP-5,Ajuste de temperatura
+2025-05-04,3,2,535,16,6.94,OP-3,Cambio de material
+2025-05-04,4,3,491,14,7.19,OP-1,Mantenimiento rutinario
+2025-05-04,5,4,874,39,7.26,OP-1,Ajuste de temperatura
+2025-05-05,1,1,514,20,6.46,OP-2,Mantenimiento rutinario
+2025-05-05,2,1,463,8,7.43,OP-3,Ajuste de temperatura
+2025-05-05,3,2,498,11,7.24,OP-1,Mantenimiento rutinario
+2025-05-05,4,3,528,23,6.31,OP-4,
+2025-05-05,5,4,797,34,8.35,OP-1,Ajuste de temperatura
+2025-05-06,1,1,475,7,6.87,OP-2,Ajuste de temperatura
+2025-05-06,2,1,457,20,6.65,OP-5,Cambio de material
+2025-05-06,3,2,454,16,6.35,OP-2,Mantenimiento rutinario
+2025-05-06,4,3,459,17,7.17,OP-5,Mantenimiento rutinario
+2025-05-06,5,4,740,15,8.26,OP-5,Mantenimiento rutinario
+2025-05-07,1,1,453,21,6.54,OP-4,Cambio de material
+2025-05-07,2,1,474,4,7.58,OP-2,Ajuste de temperatura
+2025-05-07,3,2,482,17,7.66,OP-1,Mantenimiento rutinario
+2025-05-07,4,3,514,6,6.18,OP-4,Mantenimiento rutinario
+2025-05-07,5,4,803,28,7.6,OP-1,Cambio de material

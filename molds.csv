@@ -1,0 +1,5 @@
+mold_id,mold_code,description,cavity_number,manufacturing_date,last_maintenance,status
+1,MOLD-001,Plato redondo estándar,8,2020-01-15,2023-06-01,Activo
+2,MOLD-002,Plato hondo sopero,6,2020-03-10,2023-05-15,Activo
+3,MOLD-003,Plato rectangular,4,2021-02-20,2023-07-10,Activo
+4,MOLD-004,Plato infantil,10,2019-11-05,2023-04-20,En mantenimiento
