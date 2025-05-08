@@ -1,6 +1,0 @@
-plate_type_id,type_code,description,diameter_cm,weight_grams,color,material,mold_id
-1,PLATO-001,Plato redondo 20cm,20.0,45.0,Blanco,PP,1
-2,PLATO-002,Plato redondo 25cm,25.0,60.0,Blanco,PP,1
-3,PLATO-003,Plato hondo 18cm,18.0,55.0,Transparente,PS,2
-4,PLATO-004,Plato rectangular 22x15cm,0.0,50.0,Rojo,PP,3
-5,PLATO-005,Plato infantil 15cm,15.0,35.0,Azul,PP,4

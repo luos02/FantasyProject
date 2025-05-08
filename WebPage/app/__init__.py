@@ -1,11 +1,13 @@
 from flask import Flask
 from app.models.models import db
-import psycopg2
 import traceback
+from config import get_config
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object('config.Config')
+
+    app.config.from_object(get_config())
     
     # Inicializar la base de datos
     db.init_app(app)
