@@ -3,7 +3,10 @@
 {% block title %}Reentrenar Modelo de Ventas{% endblock %}
 
 {% block content %}
-<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/prediction/retrain_model.css') }}"> -->
+<!-- Incluir Chart.js para las gráficas -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+<!-- Incluir script personalizado para el reentrenamiento -->
+<script src="{{ url_for('static', filename='js/retrainProphet.js') }}"></script>
 
 <div class="retrain-model">
     <!-- Header con breadcrumbs -->
@@ -55,7 +58,7 @@
                 <p>Suba un archivo CSV con los datos históricos actualizados para mejorar el modelo.</p>
                 
                 <div class="upload-area">
-                    <div class="upload-box">
+                    <div class="upload-box" id="upload-box">
                         <i class="fas fa-cloud-upload-alt"></i>
                         <p>Arrastre su archivo CSV aquí o haga clic para seleccionar</p>
                         <input type="file" id="data-file" accept=".csv">
@@ -75,7 +78,7 @@
                     <button class="button button-secondary" disabled>
                         <i class="fas fa-arrow-left"></i> Anterior
                     </button>
-                    <button class="button button-primary next-step" data-next="2">
+                    <button id="next-to-parameters" class="button button-primary next-step" data-next="2" disabled>
                         Siguiente <i class="fas fa-arrow-right"></i>
                     </button>
                 </div>
@@ -91,14 +94,14 @@
                         <h4><i class="fas fa-wave-square"></i> Tendencia</h4>
                         <div class="form-group">
                             <label for="growth">Tipo de crecimiento</label>
-                            <select id="growth">
+                            <select id="growth" name="growth">
                                 <option value="linear">Lineal</option>
                                 <option value="logistic">Logístico</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="changepoints">Puntos de cambio</label>
-                            <input type="number" id="changepoints" value="25" min="5" max="50">
+                            <input type="number" id="changepoints" name="changepoints" value="25" min="5" max="50">
                         </div>
                     </div>
                     
@@ -106,20 +109,20 @@
                         <h4><i class="fas fa-calendar-week"></i> Estacionalidad</h4>
                         <div class="form-group">
                             <label for="seasonality-mode">Modo</label>
-                            <select id="seasonality-mode">
+                            <select id="seasonality-mode" name="seasonality_mode">
                                 <option value="additive">Aditiva</option>
                                 <option value="multiplicative">Multiplicativa</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label>
-                                <input type="checkbox" checked>
+                                <input type="checkbox" id="weekly-seasonality" name="weekly_seasonality" checked>
                                 Estacionalidad semanal
                             </label>
                         </div>
                         <div class="form-group">
                             <label>
-                                <input type="checkbox" checked>
+                                <input type="checkbox" id="yearly-seasonality" name="yearly_seasonality" checked>
                                 Estacionalidad anual
                             </label>
                         </div>
@@ -129,13 +132,13 @@
                         <h4><i class="fas fa-bell"></i> Festivos</h4>
                         <div class="form-group">
                             <label>
-                                <input type="checkbox" checked>
+                                <input type="checkbox" id="include-holidays" name="include_holidays" checked>
                                 Incluir festivos
                             </label>
                         </div>
                         <div class="form-group">
                             <label for="holidays-scale">Escala de festivos</label>
-                            <input type="range" id="holidays-scale" min="0.1" max="1" step="0.1" value="0.5">
+                            <input type="range" id="holidays-scale" name="holidays_scale" min="0.1" max="1" step="0.1" value="0.5">
                             <span class="range-value">0.5</span>
                         </div>
                     </div>
@@ -240,7 +243,7 @@
                 
                 <div class="confirmation">
                     <label class="confirm-checkbox">
-                        <input type="checkbox">
+                        <input type="checkbox" id="confirm-checkbox">
                         <span>Entiendo que este proceso puede tomar varios minutos y afectará todas las predicciones futuras</span>
                     </label>
                     
@@ -248,7 +251,7 @@
                         <button class="button button-secondary prev-step" data-prev="3">
                             <i class="fas fa-arrow-left"></i> Anterior
                         </button>
-                        <button class="button button-primary confirm-button" disabled>
+                        <button id="train-button" class="button button-primary confirm-button" disabled>
                             <i class="fas fa-sync-alt"></i> Reentrenar Modelo
                         </button>
                     </div>
@@ -256,6 +259,12 @@
             </div>
         </div>
     </div>
+</div>
+
+<!-- Loading overlay -->
+<div id="loading-overlay" class="loading-overlay" style="display: none;">
+    <div class="spinner"></div>
+    <div id="loading-message" class="loading-message">Procesando...</div>
 </div>
 
 <!-- CSS para esta vista -->
@@ -347,6 +356,11 @@
 .upload-box:hover {
     border-color: #00796b;
     background: #f5f5f5;
+}
+
+.upload-box.drag-over {
+    border-color: #00796b;
+    background: #f0f7f6;
 }
 
 .upload-box i {
@@ -477,6 +491,11 @@ input[type="range"] {
     height: 300px;
 }
 
+.chart-container {
+    height: 100%;
+    width: 100%;
+}
+
 .summary-card {
     background: #f9f9f9;
     padding: 20px;
@@ -571,6 +590,98 @@ input[type="range"] {
   text-decoration: underline;
 }
 
+.data-preview {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f5f5f5;
+    border-radius: 8px;
+    display: none;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    margin-bottom: 15px;
+}
+
+.preview-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.preview-table th, .preview-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+.preview-table th {
+    background-color: #f0f0f0;
+    font-weight: 600;
+}
+
+.data-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.stat-item {
+    background: white;
+    padding: 10px 15px;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.stat-label {
+    display: block;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.stat-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: #00796b;
+}
+
+/* Loading overlay */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top: 4px solid #00796b;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-message {
+    color: white;
+    font-size: 16px;
+    text-align: center;
+}
+
 @media (max-width: 768px) {
     .upload-area {
         flex-direction: column;
@@ -591,6 +702,10 @@ input[type="range"] {
     
     .summary-label {
         min-width: auto;
+    }
+    
+    .data-stats {
+        grid-template-columns: 1fr;
     }
 }
 </style>
