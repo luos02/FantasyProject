@@ -1,13 +1,21 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, session, redirect, url_for, jsonify
 from app.controllers.content_controller import get_content
 from app.controllers.user_controller import list_users, add_user
+from app.controllers.dashboard_controller import DashboardController
 
 # Crear un Blueprint para las rutas de contenido
 content_bp = Blueprint('content', __name__)
 
 @content_bp.route("/index")
 def home():
-    return render_template("index.html")
+    dashboard_data = DashboardController.get_dashboard_data()
+    return render_template("index.html", dashboard_data=dashboard_data)
+
+@content_bp.route("/api/dashboard-data")
+def get_dashboard_data():
+    dashboard_data = DashboardController.get_dashboard_data()
+    return jsonify(dashboard_data)
 
 @content_bp.route("/TrainingHistory")
 def subopcion2():
@@ -39,8 +47,7 @@ def subopcion6():
 
 @content_bp.route("/Config/ManageModel/TrainModel")
 def subopcion6_1():
-    content = get_content("retrainProphetModel")
-    return render_template("config/ManageModel/retrainProphetModel.html", content=content)
+    return render_template("config/ManageModel/retrainProphetModel.html")
 
 @content_bp.route("/ViewReports/GenerateReports")
 def subopcion7():
