@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 
-{% block title %}Plataforma de Predicción de Ventas{% endblock %}
+{% block title %}Dashboard de Predicción de Ventas{% endblock %}
 
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+<!-- Incluir Chart.js para las gráficas -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
 
 <div class="dashboard">
     <div class="header-with-breadcrumbs">
@@ -14,302 +16,432 @@
         <div class="header">
             <h1>
                 <i class="fas fa-chart-line"></i>
-                <span>Plataforma de Predicción de Ventas</span>
+                <span>Dashboard de Predicción de Ventas</span>
             </h1>
         </div>
     </div>
 
-    <!-- Resumen rápido -->
+    <!-- Información del modelo -->
     <div class="stats-summary">
-        <h2><i class="fas fa-tachometer-alt"></i> Resumen Predictivo</h2>
+        <h2><i class="fas fa-robot"></i> Estado del Modelo Prophet</h2>
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-value" id="totalSales">$0</div>
-                <div class="stat-label">Ventas Totales Previstas</div>
-                <div class="stat-trend up"><i class="fas fa-arrow-up"></i> 12% vs último mes</div>
+                <div class="stat-value" id="modelLastUpdate">--/--/----</div>
+                <div class="stat-label">Último entrenamiento</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value" id="predictionAccuracy">0%</div>
-                <div class="stat-label">Precisión del Modelo</div>
+                <div class="stat-value" id="modelAccuracy">0%</div>
+                <div class="stat-label">Precisión del Modelo (100-MAPE)</div>
                 <div class="stat-trend neutral"><i class="fas fa-equals"></i> estable</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value" id="bestCategory">-</div>
-                <div class="stat-label">Categoría con Mayor Crecimiento</div>
-                <div class="stat-trend up"><i class="fas fa-arrow-up"></i> 24%</div>
+                <div class="stat-value" id="forecastSales">$0K</div>
+                <div class="stat-label">Ventas Proyectadas (30 días)</div>
+                <div class="stat-trend" id="salesTrend"><i class="fas fa-arrow-up"></i> 0%</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value" id="riskProducts">0</div>
-                <div class="stat-label">Productos en Riesgo</div>
-                <div class="stat-trend down"><i class="fas fa-arrow-down"></i> 8%</div>
+                <div class="stat-value" id="modelMetric">0.00</div>
+                <div class="stat-label">RMSE</div>
             </div>
         </div>
     </div>
 
-    <!-- Filtros rápidos -->
+    <!-- Filtros rápidos para la visualización -->
     <div class="quick-filters">
         <div class="filter-group">
-            <label for="time-period">Periodo:</label>
-            <select id="time-period">
-                <option value="7days">Últimos 7 días</option>
-                <option value="30days" selected>Últimos 30 días</option>
-                <option value="90days">Últimos 90 días</option>
-                <option value="custom">Personalizado</option>
+            <label for="time-period">Período de visualización:</label>
+            <select id="time-period" onchange="updateChartPeriod()">
+                <option value="30">Últimos 30 días + 30 días futuro</option>
+                <option value="60">Últimos 60 días + 30 días futuro</option>
+                <option value="90">Últimos 90 días + 30 días futuro</option>
+                <option value="180">Últimos 180 días + 30 días futuro</option>
             </select>
         </div>
-        <div class="filter-group">
-            <label for="product-category">Categoría:</label>
-            <select id="product-category">
-                <option value="all">Todas las categorías</option>
-                <option value="electronics">Electrónicos</option>
-                <option value="clothing">Ropa</option>
-                <option value="home">Hogar</option>
-                <option value="food">Alimentos</option>
-            </select>
-        </div>
-        <button class="button button-primary">
-            <i class="fas fa-filter"></i> Aplicar Filtros
+        <button class="button button-primary" onclick="refreshData()">
+            <i class="fas fa-sync-alt"></i> Actualizar Datos
         </button>
+        {% if session.get('user_role') in ['admin', 'analyst'] %}
+        <a href="{{ url_for('content.subopcion6_1') }}" class="button button-secondary">
+            <i class="fas fa-cogs"></i> Reentrenar Modelo
+        </a>
+        {% endif %}
     </div>
 
     <!-- Gráficos principales -->
     <div class="chart-row">
         <div class="main-chart">
             <div class="chart-header">
-                <h2><i class="fas fa-chart-line"></i> Tendencia de Ventas vs Predicción</h2>
+                <h2><i class="fas fa-chart-line"></i> Ventas Históricas y Predicción</h2>
                 <div class="chart-actions">
-                    <button class="button button-secondary" onclick="updateAnalysis()">
-                        <i class="fas fa-sync-alt"></i> Actualizar
-                    </button>
+                    <div class="chart-legend">
+                        <div class="legend-item">
+                            <span class="legend-color" style="background-color: rgba(75, 192, 192, 1);"></span>
+                            <span>Ventas Históricas</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color" style="background-color: rgba(54, 162, 235, 1);"></span>
+                            <span>Predicción</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color" style="background-color: rgba(54, 162, 235, 0.2);"></span>
+                            <span>Intervalo de Confianza</span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <canvas id="salesPredictionChart"></canvas>
         </div>
         
         <div class="secondary-chart">
-            <h2><i class="fas fa-percentage"></i> Precisión Predictiva por Categoría</h2>
-            <canvas id="accuracyChart"></canvas>
+            <h2><i class="fas fa-chart-area"></i> Componentes del Modelo</h2>
+            <select id="component-selector" onchange="updateComponentChart()">
+                <option value="trend">Tendencia</option>
+                <option value="weekly">Estacionalidad Semanal</option>
+                <option value="yearly">Estacionalidad Anual</option>
+            </select>
+            <canvas id="componentChart"></canvas>
         </div>
     </div>
 
-    <!-- Sección de datos -->
+    <!-- Sección de insights -->
     <div class="data-section">
-        <!-- Vista Previa de Datos -->
+        <!-- Métricas del modelo -->
         <div class="data-card">
             <div class="card-header">
-                <h2><i class="fas fa-table"></i> Datos de Predicción</h2>
+                <h2><i class="fas fa-table"></i> Métricas del Modelo Prophet</h2>
                 <div class="card-actions">
-                    <button class="button button-secondary" onclick="exportReport()">
-                        <i class="fas fa-download"></i> Exportar
-                    </button>
+                    <a href="{{ url_for('content.subopcion6') }}" class="button button-secondary">
+                        <i class="fas fa-eye"></i> Ver Detalles
+                    </a>
                 </div>
             </div>
             <div class="table-responsive">
-                <table id="predictionData">
+                <table id="metricsTable">
                     <thead>
                         <tr>
-                            <th>Producto</th>
-                            <th>Ventas Reales</th>
-                            <th>Predicción</th>
-                            <th>Diferencia</th>
-                            <th>Precisión</th>
-                            <th>Estado</th>
+                            <th>Métrica</th>
+                            <th>Valor</th>
+                            <th>Interpretación</th>
                         </tr>
                     </thead>
-                    <tbody></tbody>
+                    <tbody>
+                        <tr>
+                            <td>RMSE (Error Cuadrático Medio)</td>
+                            <td id="rmseValue">0.00</td>
+                            <td>Error absoluto de predicción</td>
+                        </tr>
+                        <tr>
+                            <td>MAE (Error Absoluto Medio)</td>
+                            <td id="maeValue">0.00</td>
+                            <td>Promedio del error absoluto</td>
+                        </tr>
+                        <tr>
+                            <td>MAPE (Error Porcentual Medio)</td>
+                            <td id="mapeValue">0.0%</td>
+                            <td>Error porcentual promedio</td>
+                        </tr>
+                        <tr>
+                            <td>R² (Coeficiente de Determinación)</td>
+                            <td id="r2Value">0.00</td>
+                            <td>Ajuste del modelo a los datos</td>
+                        </tr>
+                    </tbody>
                 </table>
-            </div>
-            <div class="table-footer">
-                Mostrando 10 de <span id="totalItems">0</span> productos
-                <div class="pagination">
-                    <button class="button button-secondary" disabled>
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <span>1</span>
-                    <button class="button button-secondary">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
             </div>
         </div>
 
-        <!-- Análisis de riesgo -->
+        <!-- Insights del modelo -->
         <div class="insights-card">
             <h2><i class="fas fa-lightbulb"></i> Insights Predictivos</h2>
-            <div class="insights-list">
-                <div class="insight-item">
-                    <div class="insight-icon high-risk">
-                        <i class="fas fa-exclamation-triangle"></i>
-                    </div>
-                    <div class="insight-content">
-                        <h3>Productos en riesgo</h3>
-                        <p>5 productos muestran una tendencia a la baja con más del 15% de desviación vs predicción.</p>
-                        <a href="#" class="insight-link">Ver detalles <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
-                <div class="insight-item">
-                    <div class="insight-icon opportunity">
-                        <i class="fas fa-rocket"></i>
-                    </div>
-                    <div class="insight-content">
-                        <h3>Oportunidades detectadas</h3>
-                        <p>La categoría Electrónicos está superando las predicciones en un 22% este mes.</p>
-                        <a href="#" class="insight-link">Analizar <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
-                <div class="insight-item">
-                    <div class="insight-icon seasonality">
-                        <i class="fas fa-calendar-alt"></i>
-                    </div>
-                    <div class="insight-content">
-                        <h3>Patrón estacional detectado</h3>
-                        <p>El modelo ha identificado un patrón recurrente en ventas los fines de semana.</p>
-                        <a href="#" class="insight-link">Ver patrones <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </div>
+            <div class="insights-list" id="insightsList">
+                <!-- Los insights se cargarán dinámicamente -->
             </div>
+        </div>
+    </div>
+
+    <!-- Historial de entrenamientos recientes -->
+    <div class="data-card">
+        <div class="card-header">
+            <h2><i class="fas fa-history"></i> Entrenamientos Recientes</h2>
+            <div class="card-actions">
+                <a href="{{ url_for('content.subopcion2') }}" class="button button-secondary">
+                    <i class="fas fa-list"></i> Ver Historial Completo
+                </a>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table id="trainingHistoryTable">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Tipo</th>
+                        <th>Datos utilizados</th>
+                        <th>Duración</th>
+                        <th>RMSE Anterior</th>
+                        <th>RMSE Nuevo</th>
+                        <th>Mejora</th>
+                    </tr>
+                </thead>
+                <tbody id="trainingHistoryBody">
+                    <!-- Se cargará dinámicamente -->
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
 
+<!-- Script para manejar los datos y gráficos -->
 <script>
-    // Datos de demostración mejorados
-    let predictionData = [];
-    let salesPredictionChart, accuracyChart;
+    // Variables globales
+    let dashboardData = null;
+    let salesPredictionChart = null;
+    let componentChart = null;
 
-    // Inicializar datos ficticios
-    function generateMockData() {
-        predictionData = [];
-        const categories = ['Electrónicos', 'Ropa', 'Hogar', 'Alimentos'];
-        const statuses = ['high-risk', 'medium-risk', 'low-risk', 'exceeds'];
+    // Cargar datos al iniciar
+    document.addEventListener('DOMContentLoaded', function() {
+        fetchDashboardData();
+    });
+
+    // Función para obtener datos del servidor
+    function fetchDashboardData() {
+        // Mostrar indicador de carga
+        showLoadingState();
         
-        for (let i = 1; i <= 50; i++) {
-            const category = categories[Math.floor(Math.random() * categories.length)];
-            const actualSales = Math.floor(Math.random() * 10000) + 5000;
-            const predictedSales = actualSales * (0.8 + Math.random() * 0.4);
-            const difference = actualSales - predictedSales;
-            const accuracy = 100 - Math.abs(difference) / actualSales * 100;
-            const status = statuses[Math.floor(Math.random() * statuses.length)];
-            
-            predictionData.push({
-                id: i,
-                product: `Producto ${i}`,
-                category: category,
-                actualSales: actualSales,
-                predictedSales: predictedSales,
-                difference: difference,
-                accuracy: accuracy,
-                status: status
+        fetch('/api/dashboard-data')
+            .then(response => response.json())
+            .then(data => {
+                dashboardData = data;
+                updateDashboard(data);
+                hideLoadingState();
+            })
+            .catch(error => {
+                console.error('Error al cargar datos del dashboard:', error);
+                hideLoadingState();
+                alert('Error al cargar los datos. Por favor, inténtelo de nuevo.');
             });
-        }
-        
-        updateDataTable();
-        updateSummaryStats();
-        renderCharts();
     }
 
-    // Actualizar vista de datos
-    function updateDataTable() {
-        const tbody = document.querySelector('#predictionData tbody');
-        tbody.innerHTML = '';
+    // Actualizar todo el dashboard con los nuevos datos
+    function updateDashboard(data) {
+        updateSummaryStats(data);
+        updateModelMetrics(data);
+        updateInsights(data);
+        initCharts(data);
+    }
+
+    // Actualizar estadísticas resumidas
+    function updateSummaryStats(data) {
+        // Última actualización del modelo
+        const modelInfo = data.model_info || {};
+        document.getElementById('modelLastUpdate').textContent = modelInfo.last_training || '--/--/----';
         
-        predictionData.slice(0, 10).forEach(item => {
-            const differenceClass = item.difference >= 0 ? 'positive' : 'negative';
-            const statusClass = item.status === 'exceeds' ? 'exceeds' : 
-                              item.status === 'high-risk' ? 'high-risk' : 
-                              item.status === 'medium-risk' ? 'medium-risk' : 'low-risk';
+        // Precisión del modelo (100 - MAPE)
+        const metrics = modelInfo.metrics || {};
+        const mape = metrics.mape || 0;
+        const accuracy = (100 - mape).toFixed(1);
+        document.getElementById('modelAccuracy').textContent = accuracy + '%';
+        
+        // Ventas proyectadas
+        const summary = data.summary_metrics || {};
+        document.getElementById('forecastSales').textContent = summary.total_sales || '$0K';
+        
+        // RMSE
+        document.getElementById('modelMetric').textContent = metrics.rmse || '0.00';
+        
+        // Tendencia de ventas
+        const trendEl = document.getElementById('salesTrend');
+        // Simular un valor de tendencia (en una implementación real vendría del servidor)
+        const trendValue = 12.5;
+        if (trendValue > 0) {
+            trendEl.innerHTML = `<i class="fas fa-arrow-up"></i> ${trendValue}%`;
+            trendEl.className = 'stat-trend up';
+        } else if (trendValue < 0) {
+            trendEl.innerHTML = `<i class="fas fa-arrow-down"></i> ${Math.abs(trendValue)}%`;
+            trendEl.className = 'stat-trend down';
+        } else {
+            trendEl.innerHTML = `<i class="fas fa-equals"></i> 0%`;
+            trendEl.className = 'stat-trend neutral';
+        }
+    }
+
+    // Actualizar métricas del modelo
+    function updateModelMetrics(data) {
+        const metrics = data.model_info?.metrics || {};
+        
+        document.getElementById('rmseValue').textContent = metrics.rmse || '0.00';
+        document.getElementById('maeValue').textContent = metrics.mae || '0.00';
+        document.getElementById('mapeValue').textContent = (metrics.mape || '0.0') + '%';
+        document.getElementById('r2Value').textContent = metrics.r2 || '0.00';
+    }
+
+    // Actualizar insights
+    function updateInsights(data) {
+        const insightsList = document.getElementById('insightsList');
+        insightsList.innerHTML = '';
+        
+        const insights = data.insights || [];
+        
+        if (insights.length === 0) {
+            insightsList.innerHTML = '<p>No hay insights disponibles actualmente.</p>';
+            return;
+        }
+        
+        insights.forEach(insight => {
+            const insightItem = document.createElement('div');
+            insightItem.className = `insight-item`;
             
-            tbody.innerHTML += `
-                <tr>
-                    <td>${item.product}</td>
-                    <td>$${item.actualSales.toLocaleString()}</td>
-                    <td>$${item.predictedSales.toLocaleString()}</td>
-                    <td class="${differenceClass}">${item.difference >= 0 ? '+' : ''}${item.difference.toLocaleString()}</td>
-                    <td>${item.accuracy.toFixed(1)}%</td>
-                    <td><span class="status-badge ${statusClass}">${getStatusText(item.status)}</span></td>
-                </tr>
+            insightItem.innerHTML = `
+                <div class="insight-icon ${insight.type}">
+                    <i class="fas ${insight.icon}"></i>
+                </div>
+                <div class="insight-content">
+                    <h3>${insight.title}</h3>
+                    <p>${insight.description}</p>
+                </div>
             `;
-        });
-        
-        document.getElementById('totalItems').textContent = predictionData.length;
-    }
-
-    function getStatusText(status) {
-        switch(status) {
-            case 'exceeds': return 'Supera expectativas';
-            case 'high-risk': return 'Alto riesgo';
-            case 'medium-risk': return 'Riesgo moderado';
-            case 'low-risk': return 'Bajo riesgo';
-            default: return status;
-        }
-    }
-
-    // Actualizar estadísticas resumen
-    function updateSummaryStats() {
-        // Total sales
-        const totalSales = predictionData.reduce((sum, item) => sum + item.actualSales, 0);
-        document.getElementById('totalSales').textContent = `$${(totalSales/1000).toFixed(1)}K`;
-        
-        // Average accuracy
-        const avgAccuracy = predictionData.reduce((sum, item) => sum + item.accuracy, 0) / predictionData.length;
-        document.getElementById('predictionAccuracy').textContent = `${avgAccuracy.toFixed(1)}%`;
-        
-        // Best category
-        const categoryGroups = predictionData.reduce((groups, item) => {
-            if (!groups[item.category]) groups[item.category] = [];
-            groups[item.category].push(item);
-            return groups;
-        }, {});
-        
-        let bestCategory = '';
-        let bestGrowth = 0;
-        
-        for (const category in categoryGroups) {
-            const items = categoryGroups[category];
-            const totalDiff = items.reduce((sum, item) => sum + item.difference, 0);
-            const avgGrowth = totalDiff / items.reduce((sum, item) => sum + item.predictedSales, 0) * 100;
             
-            if (avgGrowth > bestGrowth) {
-                bestGrowth = avgGrowth;
-                bestCategory = category;
-            }
-        }
-        
-        document.getElementById('bestCategory').textContent = bestCategory || '-';
-        
-        // Risk products
-        const riskProducts = predictionData.filter(item => item.status === 'high-risk').length;
-        document.getElementById('riskProducts').textContent = riskProducts;
+            insightsList.appendChild(insightItem);
+        });
     }
 
-    // Renderizar gráficos
-    function renderCharts() {
-        // Destruir gráficos existentes
-        if (salesPredictionChart) salesPredictionChart.destroy();
-        if (accuracyChart) accuracyChart.destroy();
+    // Inicializar gráficos
+    function initCharts(data) {
+        initSalesPredictionChart(data);
+        initComponentChart();
+    }
+
+    // Inicializar gráfico de predicción de ventas
+    function initSalesPredictionChart(data) {
+        const ctx = document.getElementById('salesPredictionChart').getContext('2d');
         
-        // Gráfico de tendencia de ventas vs predicción
-        const salesCtx = document.getElementById('salesPredictionChart').getContext('2d');
-        salesPredictionChart = new Chart(salesCtx, {
+        // Destruir gráfico existente si existe
+        if (salesPredictionChart) {
+            salesPredictionChart.destroy();
+        }
+        
+        // Obtener datos de predicciones
+        const predictions = data.predictions || {};
+        const historical = predictions.historical || { dates: [], values: [] };
+        const forecast = predictions.forecast || { dates: [], values: [], lower_bound: [], upper_bound: [] };
+        
+        // Limitar la cantidad de datos según el período seleccionado
+        const periodValue = parseInt(document.getElementById('time-period').value);
+        const historicalDates = historical.dates.slice(-periodValue);
+        const historicalValues = historical.values.slice(-periodValue);
+        
+        // Crear gráfico
+        salesPredictionChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul'],
+                labels: [...historicalDates, ...forecast.dates],
                 datasets: [
                     {
-                        label: 'Ventas Reales',
-                        data: [12000, 19000, 15000, 18000, 14000, 21000, 23000],
+                        label: 'Ventas Históricas',
+                        data: [...historicalValues, ...Array(forecast.dates.length).fill(null)],
                         borderColor: 'rgba(75, 192, 192, 1)',
                         backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        tension: 0.3,
-                        fill: true
+                        fill: true,
+                        tension: 0.3
                     },
                     {
                         label: 'Predicción',
-                        data: [11000, 18000, 16000, 17000, 15000, 20000, 22000],
+                        data: [...Array(historicalDates.length).fill(null), ...forecast.values],
                         borderColor: 'rgba(54, 162, 235, 1)',
                         backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        borderDash: [5, 5],
+                        fill: false,
                         tension: 0.3
+                    },
+                    {
+                        label: 'Límite Superior',
+                        data: [...Array(historicalDates.length).fill(null), ...forecast.upper_bound],
+                        borderColor: 'rgba(54, 162, 235, 0.5)',
+                        borderDash: [5, 5],
+                        fill: false,
+                        pointRadius: 0,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Límite Inferior',
+                        data: [...Array(historicalDates.length).fill(null), ...forecast.lower_bound],
+                        borderColor: 'rgba(54, 162, 235, 0.5)',
+                        borderDash: [5, 5],
+                        fill: '-1',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        pointRadius: 0,
+                        tension: 0.3
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        title: {
+                            display: true,
+                            text: 'Ventas ($)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: (context) => {
+                                // Línea vertical para separar histórico y predicción
+                                return context.tick.value === historicalDates.length - 1 ? 'rgba(0, 0, 0, 0.3)' : 'rgba(0, 0, 0, 0.1)';
+                            },
+                            lineWidth: (context) => {
+                                return context.tick.value === historicalDates.length - 1 ? 2 : 1;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Inicializar gráfico de componentes
+    function initComponentChart() {
+        const ctx = document.getElementById('componentChart').getContext('2d');
+        
+        // Destruir gráfico existente si existe
+        if (componentChart) {
+            componentChart.destroy();
+        }
+        
+        // Generar datos de ejemplo para el componente de tendencia
+        // En una implementación real, estos datos vendrían del backend
+        const dates = Array.from({length: 90}, (_, i) => {
+            const date = new Date();
+            date.setDate(date.getDate() - 90 + i);
+            return date.toISOString().substring(0, 10);
+        });
+        
+        const trendData = Array.from({length: 90}, (_, i) => {
+            return 1000 + (i * 10);
+        });
+        
+        // Crear gráfico
+        componentChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [
+                    {
+                        label: 'Tendencia',
+                        data: trendData,
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                        fill: true,
+                        tension: 0.4
                     }
                 ]
             },
@@ -327,50 +459,9 @@
                 },
                 scales: {
                     y: {
-                        beginAtZero: false,
                         title: {
                             display: true,
-                            text: 'Ventas ($)'
-                        }
-                    }
-                }
-            }
-        });
-        
-        // Gráfico de precisión por categoría
-        const accuracyCtx = document.getElementById('accuracyChart').getContext('2d');
-        accuracyChart = new Chart(accuracyCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Electrónicos', 'Ropa', 'Hogar', 'Alimentos'],
-                datasets: [{
-                    label: 'Precisión del Modelo',
-                    data: [92.5, 85.3, 88.7, 94.1],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.7)',
-                        'rgba(54, 162, 235, 0.7)',
-                        'rgba(255, 206, 86, 0.7)',
-                        'rgba(75, 192, 192, 0.7)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 100,
-                        title: {
-                            display: true,
-                            text: 'Precisión (%)'
+                            text: 'Componente'
                         }
                     }
                 }
@@ -378,47 +469,76 @@
         });
     }
 
-    // Simular actualización de modelo
-    function updateAnalysis() {
-        // Mejorar ligeramente las predicciones
-        predictionData.forEach(item => {
-            const improvement = 1 + (Math.random() * 0.05 - 0.025);
-            item.predictedSales = Math.round(item.actualSales * improvement * (0.9 + Math.random() * 0.2));
-            item.difference = item.actualSales - item.predictedSales;
-            item.accuracy = 100 - Math.abs(item.difference) / item.actualSales * 100;
-            
-            // Mejorar el estado en algunos productos
-            if (Math.random() > 0.7) {
-                if (item.status === 'high-risk') item.status = 'medium-risk';
-                else if (item.status === 'medium-risk') item.status = 'low-risk';
-            }
+    // Actualizar período del gráfico de ventas
+    function updateChartPeriod() {
+        if (dashboardData) {
+            initSalesPredictionChart(dashboardData);
+        }
+    }
+
+    // Actualizar gráfico de componentes
+    function updateComponentChart() {
+        const componentType = document.getElementById('component-selector').value;
+        
+        // En una implementación real, los datos vendrían del backend
+        // Generar datos de ejemplo para cada tipo de componente
+        const dates = Array.from({length: 90}, (_, i) => {
+            const date = new Date();
+            date.setDate(date.getDate() - 90 + i);
+            return date.toISOString().substring(0, 10);
         });
         
-        updateDataTable();
-        updateSummaryStats();
-        renderCharts();
+        let data, label, color;
         
-        // Mostrar notificación
-        showNotification('Modelo predictivo actualizado', 'Los datos se han recalculado con la información más reciente.', 'success');
+        switch(componentType) {
+            case 'trend':
+                data = Array.from({length: 90}, (_, i) => {
+                    return 1000 + (i * 10);
+                });
+                label = 'Tendencia';
+                color = 'rgba(153, 102, 255, 1)';
+                break;
+            case 'weekly':
+                data = Array.from({length: 90}, (_, i) => {
+                    const day = i % 7;
+                    // Patrón semanal: más alto en fin de semana, más bajo a mitad de semana
+                    return 100 * Math.sin((day / 7) * Math.PI * 2);
+                });
+                label = 'Estacionalidad Semanal';
+                color = 'rgba(255, 159, 64, 1)';
+                break;
+            case 'yearly':
+                data = Array.from({length: 90}, (_, i) => {
+                    // Patrón anual simplificado
+                    return 300 * Math.sin((i / 90) * Math.PI);
+                });
+                label = 'Estacionalidad Anual';
+                color = 'rgba(255, 99, 132, 1)';
+                break;
+        }
+        
+        // Actualizar datos del gráfico
+        componentChart.data.datasets[0].label = label;
+        componentChart.data.datasets[0].data = data;
+        componentChart.data.datasets[0].borderColor = color;
+        componentChart.data.datasets[0].backgroundColor = color.replace('1)', '0.2)');
+        componentChart.update();
     }
 
-    // Simular exportación
-    function exportReport() {
-        showNotification('Exportación iniciada', 'El reporte se está preparando para descarga.', 'info');
-        // Simular descarga después de un retraso
-        setTimeout(() => {
-            showNotification('Descarga completada', 'El archivo "reporte_predictivo.xlsx" se ha descargado.', 'success');
-        }, 2000);
+    // Actualizar datos al hacer clic en el botón de actualizar
+    function refreshData() {
+        fetchDashboardData();
     }
 
-    // Mostrar notificación
-    function showNotification(title, message, type) {
-        // En una implementación real, usarías un sistema de notificaciones
-        console.log(`[${type.toUpperCase()}] ${title}: ${message}`);
-        alert(`${title}\n\n${message}`);
+    // Mostrar indicador de carga
+    function showLoadingState() {
+        // En una implementación real, mostrarías un spinner o similar
+        console.log('Cargando datos...');
     }
 
-    // Inicializar demo
-    generateMockData();
+    // Ocultar indicador de carga
+    function hideLoadingState() {
+        console.log('Datos cargados.');
+    }
 </script>
 {% endblock %}
