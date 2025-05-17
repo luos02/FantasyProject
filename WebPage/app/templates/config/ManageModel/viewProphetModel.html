@@ -28,7 +28,7 @@
         <div class="card-header">
             <h2><i class="fas fa-info-circle"></i> Resumen del Modelo</h2>
             <div class="update-timestamp">
-                Actualización: <span id="last-update">15/Jul/2023 14:30</span>
+                Actualización: <span id="last-update">--/--/----</span>
                 <button id="refresh-button" class="refresh-button" title="Actualizar datos">
                     <i class="fas fa-sync-alt"></i>
                 </button>
@@ -42,23 +42,23 @@
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">Último entrenamiento</div>
-                    <div class="metric-value" id="last-training-date">15/Jul/2023 14:30</div>
+                    <div class="metric-value" id="last-training-date">--/--/----</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">Período histórico</div>
-                    <div class="metric-value" id="historical-period">Ene 2020 - Jun 2023</div>
+                    <div class="metric-value" id="historical-period">--/--/---- - --/--/----</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">RMSE</div>
-                    <div class="metric-value" id="current-rmse">245.78</div>
+                    <div class="metric-value" id="current-rmse">0.00</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">MAE</div>
-                    <div class="metric-value" id="current-mae">189.32</div>
+                    <div class="metric-value" id="current-mae">0.00</div>
                 </div>
                 <div class="metric-item">
                     <div class="metric-label">Tendencia principal</div>
-                    <div class="metric-value trend-up"><i class="fas fa-arrow-up"></i> <span id="main-trend">12% mensual</span></div>
+                    <div class="metric-value trend-up"><i class="fas fa-arrow-up"></i> <span id="main-trend">--% mensual</span></div>
                 </div>
             </div>
             
@@ -100,11 +100,11 @@
             <div class="card-header">
                 <h2><i class="fas fa-chart-area"></i> Predicción vs Real</h2>
                 <div class="time-range-selector">
-                    <select id="time-range">
-                        <option>Últimos 3 meses</option>
-                        <option selected>Últimos 6 meses</option>
-                        <option>Último año</option>
-                        <option>Todo el histórico</option>
+                    <select id="time-range" onchange="updateChart()">
+                        <option value="30">Últimos 30 días</option>
+                        <option value="60">Últimos 60 días</option>
+                        <option selected value="90">Últimos 90 días</option>
+                        <option value="180">Últimos 180 días</option>
                     </select>
                 </div>
             </div>
@@ -119,7 +119,7 @@
             <div class="card-header">
                 <h2><i class="fas fa-calendar-alt"></i> Componentes del Modelo</h2>
                 <div class="component-selector">
-                    <select id="component-selector">
+                    <select id="component-selector" onchange="updateComponentChart()">
                         <option value="trend">Tendencia</option>
                         <option value="seasonal">Estacionalidad</option>
                         <option value="holidays">Efecto de festivos</option>
@@ -139,7 +139,7 @@
         <div class="card-header">
             <h2><i class="fas fa-table"></i> Métricas de Rendimiento</h2>
             <div class="card-actions">
-                <button id="export-metrics" class="button button-secondary">
+                <button id="export-metrics" class="button button-secondary" onclick="exportMetrics()">
                     <i class="fas fa-download"></i> Exportar métricas
                 </button>
             </div>
@@ -156,23 +156,23 @@
                 <tbody>
                     <tr>
                         <td>RMSE</td>
-                        <td id="table-rmse">245.78</td>
-                        <td>Error estándar moderado</td>
+                        <td id="table-rmse">0.00</td>
+                        <td>Error estándar del modelo</td>
                     </tr>
                     <tr>
                         <td>MAE</td>
-                        <td id="table-mae">189.32</td>
+                        <td id="table-mae">0.00</td>
                         <td>Error absoluto aceptable</td>
                     </tr>
                     <tr>
                         <td>MAPE</td>
-                        <td id="table-mape">8.5%</td>
-                        <td>Precisión buena</td>
+                        <td id="table-mape">0.0%</td>
+                        <td>Precisión del modelo</td>
                     </tr>
                     <tr>
                         <td>R²</td>
-                        <td id="table-r2">0.87</td>
-                        <td>Buen ajuste</td>
+                        <td id="table-r2">0.00</td>
+                        <td>Ajuste del modelo a los datos</td>
                     </tr>
                 </tbody>
             </table>
@@ -453,16 +453,56 @@ document.addEventListener('DOMContentLoaded', function() {
     initCharts();
     
     // Eventos para actualizar las gráficas
-    document.getElementById('time-range').addEventListener('change', updatePredictionChart);
-    document.getElementById('component-selector').addEventListener('change', updateComponentsChart);
+    document.getElementById('time-range').addEventListener('change', updateChart);
+    document.getElementById('component-selector').addEventListener('change', updateComponentChart);
     document.getElementById('refresh-button').addEventListener('click', refreshModelData);
-    document.getElementById('export-metrics').addEventListener('click', exportMetricsToCSV);
     
-    // Inicializar gráficas
+    // Inicializar datos del modelo y gráficas
     function initCharts() {
-        initPredictionChart();
-        initComponentsChart();
         fetchModelMetrics();
+        initPredictionChart();
+        initComponentChart();
+    }
+    
+    // Obtener métricas del modelo
+    function fetchModelMetrics() {
+        fetch('/model/metrics')
+            .then(response => response.json())
+            .then(data => {
+                updateModelMetrics(data);
+            })
+            .catch(error => {
+                console.error('Error al obtener métricas:', error);
+            });
+    }
+    
+    // Actualizar métricas del modelo en la UI
+    function updateModelMetrics(data) {
+        const metrics = data.current_model || {};
+        
+        // Actualizar métricas en la sección de resumen
+        document.getElementById('current-rmse').textContent = metrics.rmse || '0.00';
+        document.getElementById('current-mae').textContent = metrics.mae || '0.00';
+        
+        // Actualizar fecha de último entrenamiento (simulada para este ejemplo)
+        const now = new Date();
+        document.getElementById('last-update').textContent = now.toLocaleDateString('es-ES');
+        document.getElementById('last-training-date').textContent = now.toLocaleDateString('es-ES');
+        
+        // Simular período histórico
+        const startDate = new Date();
+        startDate.setMonth(startDate.getMonth() - 12); // 1 año atrás
+        document.getElementById('historical-period').textContent = 
+            `${startDate.toLocaleDateString('es-ES')} - ${now.toLocaleDateString('es-ES')}`;
+        
+        // Simular tendencia (esto vendría del análisis real)
+        document.getElementById('main-trend').textContent = '12% mensual';
+        
+        // Actualizar tabla de métricas
+        document.getElementById('table-rmse').textContent = metrics.rmse || '0.00';
+        document.getElementById('table-mae').textContent = metrics.mae || '0.00';
+        document.getElementById('table-mape').textContent = (metrics.mape || '0.0') + '%';
+        document.getElementById('table-r2').textContent = metrics.r2 || '0.00';
     }
     
     // Inicializar gráfico de predicción vs real
@@ -473,6 +513,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const labels = generateDates(180, -180); // Últimos 6 meses
         const realData = generateRandomData(labels.length, 1000, 2000);
         const predData = generateRandomDataWithTrend(labels.length, realData, 0.1);
+        
+        // Intervalo de confianza
+        const upperBound = predData.map(val => val * 1.15);
+        const lowerBound = predData.map(val => val * 0.85);
         
         predictionChart = new Chart(ctx, {
             type: 'line',
@@ -494,6 +538,25 @@ document.addEventListener('DOMContentLoaded', function() {
                         backgroundColor: 'rgba(54, 162, 235, 0.2)',
                         borderDash: [5, 5],
                         fill: false,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Límite Superior',
+                        data: upperBound,
+                        borderColor: 'rgba(54, 162, 235, 0.5)',
+                        borderDash: [5, 5],
+                        fill: false,
+                        pointRadius: 0,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Límite Inferior',
+                        data: lowerBound,
+                        borderColor: 'rgba(54, 162, 235, 0.5)',
+                        borderDash: [5, 5],
+                        fill: '-1',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        pointRadius: 0,
                         tension: 0.3
                     }
                 ]
@@ -524,7 +587,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Inicializar gráfico de componentes
-    function initComponentsChart() {
+    function initComponentChart() {
         const ctx = document.getElementById('componentsChart').getContext('2d');
         
         // Generar datos para la tendencia
@@ -571,42 +634,28 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Actualizar gráfico de predicción según rango seleccionado
-    function updatePredictionChart() {
+    function updateChart() {
         const rangeSelector = document.getElementById('time-range');
-        const selectedRange = rangeSelector.options[rangeSelector.selectedIndex].text;
-        
-        let days;
-        switch(selectedRange) {
-            case 'Últimos 3 meses':
-                days = 90;
-                break;
-            case 'Últimos 6 meses':
-                days = 180;
-                break;
-            case 'Último año':
-                days = 365;
-                break;
-            case 'Todo el histórico':
-                days = 730;
-                break;
-            default:
-                days = 180;
-        }
+        const selectedRange = parseInt(rangeSelector.value);
         
         // Generar nuevos datos
-        const labels = generateDates(days, -days);
+        const labels = generateDates(selectedRange, -selectedRange);
         const realData = generateRandomData(labels.length, 1000, 2000);
         const predData = generateRandomDataWithTrend(labels.length, realData, 0.1);
+        const upperBound = predData.map(val => val * 1.15);
+        const lowerBound = predData.map(val => val * 0.85);
         
         // Actualizar datos de la gráfica
         predictionChart.data.labels = labels;
         predictionChart.data.datasets[0].data = realData;
         predictionChart.data.datasets[1].data = predData;
+        predictionChart.data.datasets[2].data = upperBound;
+        predictionChart.data.datasets[3].data = lowerBound;
         predictionChart.update();
     }
     
     // Actualizar gráfico de componentes según selección
-    function updateComponentsChart() {
+    function updateComponentChart() {
         const componentSelector = document.getElementById('component-selector');
         const selectedComponent = componentSelector.value;
         
@@ -644,66 +693,30 @@ document.addEventListener('DOMContentLoaded', function() {
         componentsChart.update();
     }
     
-    // Actualizar datos del modelo
+    // Función para actualizar datos del modelo
     function refreshModelData() {
-        // Aquí se haría una solicitud al servidor para obtener los datos actualizados
-        // Simulamos actualización de datos
+        // Mostrar spinner de carga
         showLoadingSpinner();
         
-        // Simular retardo de red
-        setTimeout(() => {
-            // Actualizar fecha de último entrenamiento
-            const now = new Date();
-            const formattedDate = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()} ${now.getHours()}:${now.getMinutes()}`;
-            document.getElementById('last-update').textContent = formattedDate;
-            
-            // Actualizar métricas (valores aleatorios)
-            const newRMSE = (Math.random() * 50 + 200).toFixed(2);
-            const newMAE = (Math.random() * 40 + 150).toFixed(2);
-            
-            document.getElementById('current-rmse').textContent = newRMSE;
-            document.getElementById('current-mae').textContent = newMAE;
-            document.getElementById('table-rmse').textContent = newRMSE;
-            document.getElementById('table-mae').textContent = newMAE;
-            
-            // Actualizar gráficas
-            updatePredictionChart();
-            updateComponentsChart();
-            
-            hideLoadingSpinner();
-        }, 1500);
-    }
-    
-    // Obtener métricas del modelo
-    function fetchModelMetrics() {
-        // Aquí se haría una solicitud al endpoint /model/metrics
-        // Para este ejemplo usamos datos simulados
-        const metrics = {
-            current_model: {
-                rmse: 245.78,
-                mae: 189.32,
-                mape: 8.5,
-                r2: 0.87
-            }
-        };
+        // Obtener datos actualizados del servidor
+        fetchModelMetrics();
         
-        // Actualizar métricas en la interfaz
-        document.getElementById('current-rmse').textContent = metrics.current_model.rmse;
-        document.getElementById('current-mae').textContent = metrics.current_model.mae;
-        document.getElementById('table-rmse').textContent = metrics.current_model.rmse;
-        document.getElementById('table-mae').textContent = metrics.current_model.mae;
-        document.getElementById('table-mape').textContent = metrics.current_model.mape + '%';
-        document.getElementById('table-r2').textContent = metrics.current_model.r2;
+        // Actualizar gráficos
+        updateChart();
+        updateComponentChart();
+        
+        // Simular retardo de red
+        setTimeout(hideLoadingSpinner, 1000);
     }
     
     // Exportar métricas a CSV
-    function exportMetricsToCSV() {
+    function exportMetrics() {
         const metrics = [
             ['Métrica', 'Valor', 'Interpretación'],
-            ['RMSE', document.getElementById('table-rmse').textContent, 'Error estándar moderado'],
+            ['RMSE', document.getElementById('table-rmse').textContent, 'Error estándar del modelo'],
             ['MAE', document.getElementById('table-mae').textContent, 'Error absoluto aceptable'],
-            ['MAPE', document.getElementById('table-mape').textContent, 'Precisión buena'],
-            ['R²', document.getElementById('table-r2').textContent, 'Buen ajuste']
+            ['MAPE', document.getElementById('table-mape').textContent, 'Precisión del modelo'],
+            ['R²', document.getElementById('table-r2').textContent, 'Ajuste del modelo a los datos']
         ];
         
         let csvContent = "data:text/csv;charset=utf-8,";
