@@ -4,6 +4,9 @@
 
 {% block content %}
 <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/model/history.css') }}"> -->
+<!-- Incluir jsPDF para generación de PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 
 <div class="training-history">
     <!-- Encabezado con breadcrumbs -->
@@ -35,29 +38,30 @@
             </div>
             
             <div class="filter-group">
-                <label for="model-type">Tipo de modelo:</label>
-                <select id="model-type">
+                <label for="training-type">Tipo de entrenamiento:</label>
+                <select id="training-type">
                     <option value="all">Todos</option>
-                    <option value="prophet">Prophet</option>
-                    <option value="initial">Inicial</option>
-                    <option value="retrained">Reentrenado</option>
+                    <option value="Initial">Inicial</option>
+                    <option value="Retrain">Reentrenamiento</option>
+                    <option value="Maintenance">Mantenimiento</option>
                 </select>
             </div>
             
             <div class="filter-group">
-                <label for="results">Resultados:</label>
-                <select id="results">
+                <label for="status">Estado:</label>
+                <select id="status">
                     <option value="all">Todos</option>
-                    <option value="improved">Con mejora</option>
-                    <option value="worsened">Con empeoro</option>
+                    <option value="success">Exitoso</option>
+                    <option value="failed">Fallido</option>
+                    <option value="in_progress">En progreso</option>
                 </select>
             </div>
             
-            <button class="button button-secondary">
+            <button class="button button-secondary" id="filter-button">
                 <i class="fas fa-filter"></i> Filtrar
             </button>
             
-            <button class="button button-secondary">
+            <button class="button button-secondary" id="reset-button">
                 <i class="fas fa-redo"></i> Restablecer
             </button>
         </div>
@@ -66,19 +70,19 @@
     <!-- Estadísticas resumen -->
     <div class="stats-grid">
         <div class="stat-card">
-            <div class="stat-value">15</div>
+            <div class="stat-value" id="total-trainings">0</div>
             <div class="stat-label">Entrenamientos totales</div>
         </div>
         <div class="stat-card">
-            <div class="stat-value">12</div>
+            <div class="stat-value" id="total-retrainings">0</div>
             <div class="stat-label">Reentrenamientos</div>
         </div>
         <div class="stat-card">
-            <div class="stat-value">8.2%</div>
+            <div class="stat-value" id="avg-improvement">0%</div>
             <div class="stat-label">Mejora promedio</div>
         </div>
         <div class="stat-card">
-            <div class="stat-value">3d 5h</div>
+            <div class="stat-value" id="total-time">0h</div>
             <div class="stat-label">Tiempo total entrenamiento</div>
         </div>
     </div>
@@ -88,9 +92,6 @@
         <div class="card-header">
             <h2><i class="fas fa-table"></i> Registro de Entrenamientos</h2>
             <div class="header-actions">
-                <button class="button button-secondary">
-                    <i class="fas fa-file-export"></i> Exportar
-                </button>
             </div>
         </div>
         
@@ -104,117 +105,53 @@
                             <th>Tipo</th>
                             <th>Datos utilizados</th>
                             <th>Duración</th>
-                            <th>RMSE</th>
-                            <th>MAE</th>
+                            <th>RMSE anterior</th>
+                            <th>RMSE nuevo</th>
                             <th>Mejora</th>
                             <th>Usuario</th>
+                            <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <!-- Ejemplo de fila 1 -->
+                    <tbody id="history-table-body">
+                        <!-- Datos cargados dinámicamente -->
                         <tr>
-                            <td>#TRN-0015</td>
-                            <td>15/Jul/2023 14:30</td>
-                            <td><span class="badge badge-retrain">Reentrenamiento</span></td>
-                            <td>1,245 registros (Ene-Jul 2023)</td>
-                            <td>42 min</td>
-                            <td>218.43</td>
-                            <td>172.15</td>
-                            <td><span class="improvement">+11.2%</span></td>
-                            <td>admin@empresa.com</td>
-                            <td>
-                                <button class="icon-button" title="Ver detalles">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="icon-button" title="Descargar reporte">
-                                    <i class="fas fa-download"></i>
-                                </button>
+                            <td colspan="11" class="text-center">
+                                <i class="fas fa-spinner fa-spin"></i> Cargando datos...
                             </td>
                         </tr>
-                        
-                        <!-- Ejemplo de fila 2 -->
-                        <tr>
-                            <td>#TRN-0014</td>
-                            <td>10/Jun/2023 09:15</td>
-                            <td><span class="badge badge-retrain">Reentrenamiento</span></td>
-                            <td>980 registros (Abr-May 2023)</td>
-                            <td>38 min</td>
-                            <td>225.67</td>
-                            <td>178.92</td>
-                            <td><span class="improvement">+8.5%</span></td>
-                            <td>analyst@empresa.com</td>
-                            <td>
-                                <button class="icon-button" title="Ver detalles">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="icon-button" title="Descargar reporte">
-                                    <i class="fas fa-download"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        
-                        <!-- Ejemplo de fila 3 -->
-                        <tr>
-                            <td>#TRN-0013</td>
-                            <td>01/May/2023 16:45</td>
-                            <td><span class="badge badge-standard">Mantenimiento</span></td>
-                            <td>Mismo dataset</td>
-                            <td>25 min</td>
-                            <td>230.12</td>
-                            <td>182.45</td>
-                            <td><span class="neutral">+0.3%</span></td>
-                            <td>system@empresa.com</td>
-                            <td>
-                                <button class="icon-button" title="Ver detalles">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="icon-button" title="Descargar reporte">
-                                    <i class="fas fa-download"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        
-                        <!-- Ejemplo de fila 4 -->
-                        <tr>
-                            <td>#TRN-0012</td>
-                            <td>15/Abr/2023 11:20</td>
-                            <td><span class="badge badge-retrain">Reentrenamiento</span></td>
-                            <td>1,150 registros (Ene-Mar 2023)</td>
-                            <td>47 min</td>
-                            <td>235.89</td>
-                            <td>186.72</td>
-                            <td><span class="worsened">-2.1%</span></td>
-                            <td>admin@empresa.com</td>
-                            <td>
-                                <button class="icon-button" title="Ver detalles">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="icon-button" title="Descargar reporte">
-                                    <i class="fas fa-download"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        
-                        <!-- Más filas de ejemplo... -->
                     </tbody>
                 </table>
             </div>
             
             <!-- Paginación -->
             <div class="pagination">
-                <button class="button button-secondary" disabled>
+                <button class="button button-secondary" id="prev-button" disabled>
                     <i class="fas fa-chevron-left"></i>
                 </button>
-                <button class="page-button active">1</button>
-                <button class="page-button">2</button>
-                <button class="page-button">3</button>
-                <span>...</span>
-                <button class="page-button">5</button>
-                <button class="button button-secondary">
+                <div id="page-buttons">
+                    <!-- Botones de página generados dinámicamente -->
+                </div>
+                <button class="button button-secondary" id="next-button">
                     <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de detalles -->
+<div id="details-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Detalles del Entrenamiento</h3>
+            <span class="close-modal">&times;</span>
+        </div>
+        <div class="modal-body" id="details-content">
+            <!-- Contenido generado dinámicamente -->
+        </div>
+        <div class="modal-footer">
+            <button class="button button-secondary" id="close-details">Cerrar</button>
         </div>
     </div>
 </div>
@@ -353,7 +290,35 @@ select {
     color: #10b981;
 }
 
-.badge-standard {
+.badge-initial {
+    background-color: #ebf2ff;
+    color: #3b82f6;
+}
+
+.badge-maintenance {
+    background-color: #f8f9fa;
+    color: #6c757d;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.status-success {
+    background-color: #e6f7ee;
+    color: #10b981;
+}
+
+.status-failed {
+    background-color: #fee2e2;
+    color: #ef4444;
+}
+
+.status-in-progress {
     background-color: #ebf2ff;
     color: #3b82f6;
 }
@@ -397,6 +362,11 @@ select {
     margin-top: 20px;
 }
 
+#page-buttons {
+    display: flex;
+    gap: 5px;
+}
+
 .page-button {
     width: 35px;
     height: 35px;
@@ -438,6 +408,113 @@ select {
   text-decoration: underline;
 }
 
+/* Modal styles */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    width: 90%;
+    max-width: 700px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.close-modal {
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-footer {
+    padding: 15px 20px;
+    border-top: 1px solid #eee;
+    text-align: right;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* Detail view styling */
+.detail-section {
+    margin-bottom: 20px;
+}
+
+.detail-section h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.detail-item {
+    margin-bottom: 15px;
+}
+
+.detail-label {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.detail-value {
+    font-weight: 500;
+}
+
+.metrics-comparison {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.metrics-comparison th,
+.metrics-comparison td {
+    padding: 8px 10px;
+    border: 1px solid #eee;
+}
+
+.metrics-comparison th {
+    background-color: #f5f5f5;
+    font-weight: 500;
+}
+
 @media (max-width: 768px) {
     .filter-row {
         flex-direction: column;
@@ -465,6 +542,526 @@ select {
     .history-table td {
         padding: 8px 10px;
     }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
 }
 </style>
+
+<script>
+// Variables globales
+let currentPage = 1;
+let totalPages = 1;
+let limit = 10;
+let offset = 0;
+let totalTrainings = 0;
+let filters = {
+    date_from: null,
+    date_to: null,
+    training_type: 'all',
+    status: 'all'
+};
+
+// Inicializar al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+    // Establecer fechas iniciales para filtros (último mes)
+    setDefaultDates();
+    
+    // Cargar datos iniciales
+    loadTrainingHistory();
+    
+    // Eventos para filtros
+    document.getElementById('filter-button').addEventListener('click', applyFilters);
+    document.getElementById('reset-button').addEventListener('click', resetFilters);
+    // document.getElementById('export-button').addEventListener('click', exportHistory);
+    
+    // Eventos de paginación
+    document.getElementById('prev-button').addEventListener('click', goToPreviousPage);
+    document.getElementById('next-button').addEventListener('click', goToNextPage);
+    
+    // Eventos para modal de detalles
+    document.querySelector('.close-modal').addEventListener('click', closeDetailsModal);
+    document.getElementById('close-details').addEventListener('click', closeDetailsModal);
+});
+
+// Establecer fechas predeterminadas (último mes)
+function setDefaultDates() {
+    const today = new Date();
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(today.getMonth() - 1);
+    
+    document.getElementById('start-date').valueAsDate = oneMonthAgo;
+    document.getElementById('end-date').valueAsDate = today;
+}
+
+// Cargar historial de entrenamientos
+function loadTrainingHistory() {
+    showLoadingState();
+    
+    // Construir URL de la API con filtros
+    let url = '/model/history?limit=' + limit + '&offset=' + offset;
+    
+    // Añadir filtros si están definidos
+    if (filters.date_from) {
+        url += '&date_from=' + filters.date_from;
+    }
+    if (filters.date_to) {
+        url += '&date_to=' + filters.date_to;
+    }
+    if (filters.training_type && filters.training_type !== 'all') {
+        url += '&training_type=' + filters.training_type;
+    }
+    if (filters.status && filters.status !== 'all') {
+        url += '&status=' + filters.status;
+    }
+    
+    // Realizar la petición a la API
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la petición');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Actualizar datos globales
+            totalTrainings = data.total;
+            totalPages = Math.ceil(totalTrainings / limit);
+            
+            // Actualizar la tabla y las estadísticas
+            updateTable(data.results);
+            updatePagination();
+            updateStats(data);
+            
+            hideLoadingState();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('history-table-body').innerHTML = `
+                <tr>
+                    <td colspan="11" class="text-center">
+                        <i class="fas fa-exclamation-circle"></i> Error al cargar los datos. Inténtelo de nuevo.
+                    </td>
+                </tr>
+            `;
+            hideLoadingState();
+        });
+}
+
+// Actualizar tabla con datos
+function updateTable(trainings) {
+    const tableBody = document.getElementById('history-table-body');
+    
+    if (!trainings || trainings.length === 0) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="11" class="text-center">
+                    No hay entrenamientos que coincidan con los filtros seleccionados.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+    
+    let html = '';
+    
+    trainings.forEach(training => {
+        // Determinar la clase de insignia para el tipo de entrenamiento
+        let typeBadgeClass = 'badge-maintenance';
+        if (training.training_type === 'Initial') {
+            typeBadgeClass = 'badge-initial';
+        } else if (training.training_type === 'Retrain') {
+            typeBadgeClass = 'badge-retrain';
+        }
+        
+        // Determinar la clase de insignia para el estado
+        let statusBadgeClass = 'status-in-progress';
+        let statusText = 'En progreso';
+        if (training.status === 'success') {
+            statusBadgeClass = 'status-success';
+            statusText = 'Exitoso';
+        } else if (training.status === 'failed') {
+            statusBadgeClass = 'status-failed';
+            statusText = 'Fallido';
+        }
+        
+        // Determinar la clase para la mejora
+        let improvementClass = 'neutral';
+        let improvementText = training.improvement || '-';
+        if (parseFloat(improvementText) > 0) {
+            improvementClass = 'improvement';
+        } else if (parseFloat(improvementText) < 0) {
+            improvementClass = 'worsened';
+        }
+        
+        html += `
+            <tr>
+                <td>#TRN-${training.id.toString().padStart(4, '0')}</td>
+                <td>${training.start_time}</td>
+                <td><span class="badge ${typeBadgeClass}">${translateTrainingType(training.training_type)}</span></td>
+                <td>${training.data_summary || 'No disponible'}</td>
+                <td>${training.duration || '-'}</td>
+                <td>${training.prev_rmse || '-'}</td>
+                <td>${training.new_rmse || '-'}</td>
+                <td><span class="${improvementClass}">${improvementText}</span></td>
+                <td>${training.user_id || '-'}</td>
+                <td><span class="status-badge ${statusBadgeClass}">${statusText}</span></td>
+                <td class="actions">
+                    <button class="icon-button" title="Ver detalles" onclick="showDetails(${training.id})">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+    
+    tableBody.innerHTML = html;
+}
+
+// Traducir tipo de entrenamiento al español
+function translateTrainingType(type) {
+    switch (type) {
+        case 'Initial':
+            return 'Inicial';
+        case 'Retrain':
+            return 'Reentrenamiento';
+        case 'Maintenance':
+            return 'Mantenimiento';
+        default:
+            return type;
+    }
+}
+
+// Actualizar estadísticas
+function updateStats(data) {
+    // En un entorno real, estos datos vendrían del backend
+    // Por ahora, vamos a calcularlos basados en los resultados
+    const trainings = data.results || [];
+    
+    // Contar entrenamientos por tipo
+    let retrainingCount = trainings.filter(t => t.training_type === 'Retrain').length;
+    
+    // Calcular mejora promedio
+    let improvements = trainings
+        .filter(t => t.improvement && t.improvement !== '-')
+        .map(t => parseFloat(t.improvement));
+    
+    let avgImprovement = 0;
+    if (improvements.length > 0) {
+        avgImprovement = improvements.reduce((sum, val) => sum + val, 0) / improvements.length;
+    }
+    
+    // Calcular tiempo total aproximado (en horas)
+    let totalMinutes = 0;
+    
+    trainings.forEach(training => {
+        if (training.duration) {
+            // Convertir duración (e.g. "42 min") a minutos
+            const durationMatch = training.duration.match(/(\d+)m/);
+            if (durationMatch) {
+                totalMinutes += parseInt(durationMatch[1]);
+            }
+        }
+    });
+    
+    let totalHours = Math.round(totalMinutes / 60 * 10) / 10;
+    
+    // Actualizar elementos del DOM
+    document.getElementById('total-trainings').textContent = data.total || 0;
+    document.getElementById('total-retrainings').textContent = retrainingCount;
+    document.getElementById('avg-improvement').textContent = avgImprovement.toFixed(1) + '%';
+    document.getElementById('total-time').textContent = totalHours + 'h';
+}
+
+// Actualizar paginación
+function updatePagination() {
+    const paginationContainer = document.getElementById('page-buttons');
+    const prevButton = document.getElementById('prev-button');
+    const nextButton = document.getElementById('next-button');
+    
+    // Deshabilitar/habilitar botones de navegación
+    prevButton.disabled = currentPage === 1;
+    nextButton.disabled = currentPage === totalPages;
+    
+    // Generar botones de página
+    let html = '';
+    
+    // Siempre mostramos la primera página
+    html += `<button class="page-button ${currentPage === 1 ? 'active' : ''}" data-page="1">1</button>`;
+    
+    // Si hay muchas páginas, usar elipsis
+    if (totalPages > 7) {
+        if (currentPage > 3) {
+            html += '<span>...</span>';
+        }
+        
+        // Mostrar páginas cercanas a la actual
+        let startPage = Math.max(2, currentPage - 1);
+        let endPage = Math.min(totalPages - 1, currentPage + 1);
+        
+        // Ajustar si estamos cerca del inicio o final
+        if (currentPage <= 3) {
+            endPage = 4;
+        } else if (currentPage >= totalPages - 2) {
+            startPage = totalPages - 3;
+        }
+        
+        for (let i = startPage; i <= endPage; i++) {
+            html += `<button class="page-button ${currentPage === i ? 'active' : ''}" data-page="${i}">${i}</button>`;
+        }
+        
+        if (currentPage < totalPages - 2) {
+            html += '<span>...</span>';
+        }
+    } else {
+        // Mostrar todas las páginas si son pocas
+        for (let i = 2; i <= totalPages; i++) {
+            html += `<button class="page-button ${currentPage === i ? 'active' : ''}" data-page="${i}">${i}</button>`;
+        }
+    }
+    
+    // Siempre mostramos la última página si hay más de 1
+    if (totalPages > 1) {
+        html += `<button class="page-button ${currentPage === totalPages ? 'active' : ''}" data-page="${totalPages}">${totalPages}</button>`;
+    }
+    
+    paginationContainer.innerHTML = html;
+    
+    // Agregar eventos a los botones de página
+    document.querySelectorAll('.page-button').forEach(button => {
+        button.addEventListener('click', function() {
+            goToPage(parseInt(this.dataset.page));
+        });
+    });
+}
+
+// Ir a página específica
+function goToPage(page) {
+    if (page < 1 || page > totalPages || page === currentPage) {
+        return;
+    }
+    
+    currentPage = page;
+    offset = (currentPage - 1) * limit;
+    loadTrainingHistory();
+}
+
+// Ir a página anterior
+function goToPreviousPage() {
+    if (currentPage > 1) {
+        goToPage(currentPage - 1);
+    }
+}
+
+// Ir a página siguiente
+function goToNextPage() {
+    if (currentPage < totalPages) {
+        goToPage(currentPage + 1);
+    }
+}
+
+// Aplicar filtros
+function applyFilters() {
+    const startDate = document.getElementById('start-date').value;
+    const endDate = document.getElementById('end-date').value;
+    const trainingType = document.getElementById('training-type').value;
+    const status = document.getElementById('status').value;
+    
+    // Validar fechas
+    if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
+        alert('La fecha de inicio debe ser anterior a la fecha de fin');
+        return;
+    }
+    
+    // Actualizar filtros
+    filters = {
+        date_from: startDate,
+        date_to: endDate,
+        training_type: trainingType,
+        status: status
+    };
+    
+    // Resetear la paginación
+    currentPage = 1;
+    offset = 0;
+    
+    // Cargar datos con los nuevos filtros
+    loadTrainingHistory();
+}
+
+// Restablecer filtros
+function resetFilters() {
+    // Restablecer campos de filtro
+    setDefaultDates();
+    document.getElementById('training-type').value = 'all';
+    document.getElementById('status').value = 'all';
+    
+    // Limpiar filtros
+    filters = {
+        date_from: null,
+        date_to: null,
+        training_type: 'all',
+        status: 'all'
+    };
+    
+    // Resetear la paginación
+    currentPage = 1;
+    offset = 0;
+    
+    // Cargar datos sin filtros
+    loadTrainingHistory();
+}
+
+// Exportar historial
+function exportHistory() {
+    // En una implementación real, esto haría una petición al servidor para obtener todos los datos
+    // y luego generaría un archivo CSV o Excel
+    alert('Exportación del historial de entrenamientos en desarrollo');
+}
+
+// Mostrar detalles de un entrenamiento
+function showDetails(trainingId) {
+    // En una implementación real, esto haría una petición al servidor para obtener los detalles del entrenamiento
+    // Por ahora, mostraremos datos simulados
+    
+    const modalContent = document.getElementById('details-content');
+    
+    // Simular carga
+    modalContent.innerHTML = `
+        <div class="text-center" style="padding: 20px;">
+            <i class="fas fa-spinner fa-spin" style="font-size: 24px;"></i>
+            <p>Cargando detalles...</p>
+        </div>
+    `;
+    
+    // Mostrar modal
+    document.getElementById('details-modal').style.display = 'flex';
+    
+    // Simular petición de datos
+    setTimeout(() => {
+        // Generamos contenido de ejemplo
+        const detailsHTML = `
+            <div class="detail-section">
+                <h4>Información General</h4>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">ID</div>
+                        <div class="detail-value">#TRN-${trainingId.toString().padStart(4, '0')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Fecha de inicio</div>
+                        <div class="detail-value">15/Jul/2023 14:30</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Tipo</div>
+                        <div class="detail-value">Reentrenamiento</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Estado</div>
+                        <div class="detail-value"><span class="status-badge status-success">Exitoso</span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="detail-section">
+                <h4>Datos de Entrenamiento</h4>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Registros utilizados</div>
+                        <div class="detail-value">1,245 registros</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Rango de fechas</div>
+                        <div class="detail-value">Ene-Jul 2023</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Duración</div>
+                        <div class="detail-value">42 min</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Usuario</div>
+                        <div class="detail-value">admin@empresa.com</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="detail-section">
+                <h4>Comparación de Métricas</h4>
+                <table class="metrics-comparison">
+                    <thead>
+                        <tr>
+                            <th>Métrica</th>
+                            <th>Valor anterior</th>
+                            <th>Valor nuevo</th>
+                            <th>Mejora</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>RMSE</td>
+                            <td>245.78</td>
+                            <td>218.43</td>
+                            <td class="improvement">11.2%</td>
+                        </tr>
+                        <tr>
+                            <td>MAE</td>
+                            <td>189.32</td>
+                            <td>172.15</td>
+                            <td class="improvement">9.1%</td>
+                        </tr>
+                        <tr>
+                            <td>MAPE</td>
+                            <td>8.5%</td>
+                            <td>7.8%</td>
+                            <td class="improvement">8.2%</td>
+                        </tr>
+                        <tr>
+                            <td>R²</td>
+                            <td>0.87</td>
+                            <td>0.89</td>
+                            <td class="improvement">2.3%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="detail-section">
+                <h4>Notas</h4>
+                <p>Entrenamiento exitoso con parámetros personalizados: {"growth":"linear","changepoints":30,"seasonality_mode":"multiplicative"}</p>
+            </div>
+        `;
+        
+        modalContent.innerHTML = detailsHTML;
+    }, 1000);
+}
+
+// Cerrar modal de detalles
+function closeDetailsModal() {
+    document.getElementById('details-modal').style.display = 'none';
+}
+
+// Descargar reporte de un entrenamiento
+function downloadReport(trainingId) {
+    // En una implementación real, esto haría una petición al servidor
+    alert(`Descarga del reporte para el entrenamiento #TRN-${trainingId.toString().padStart(4, '0')} en desarrollo`);
+}
+
+// Mostrar estado de carga
+function showLoadingState() {
+    const tableBody = document.getElementById('history-table-body');
+    tableBody.innerHTML = `
+        <tr>
+            <td colspan="11" class="text-center">
+                <i class="fas fa-spinner fa-spin"></i> Cargando datos...
+            </td>
+        </tr>
+    `;
+}
+
+// Ocultar estado de carga
+function hideLoadingState() {
+    // El estado de carga se elimina al actualizar la tabla
+}
+</script>
 {% endblock %}

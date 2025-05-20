@@ -111,11 +111,13 @@
                     <span>Componentes del Modelo</span>
                 </h2>
                 <div class="component-selector">
-                    <select id="component-selector" onchange="updateComponentChart()">
-                        <option value="trend">Tendencia</option>
-                        <option value="weekly">Estacionalidad Semanal</option>
-                        <option value="yearly">Estacionalidad Anual</option>
-                    </select>
+                    <div class="filter-group">
+                        <select id="component-selector" onchange="updateComponentChart()">
+                            <option value="trend">Tendencia</option>
+                            <option value="weekly">Estacionalidad Semanal</option>
+                            <option value="yearly">Estacionalidad Anual</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <div class="chart-wrapper">

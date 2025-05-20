@@ -6,6 +6,10 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/reports/generator.css') }}">
 <!-- Incluir Chart.js para las gráficas -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+<!-- Bibliotecas para exportación -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
 <div class="report-generator">
     <!-- Encabezado con breadcrumbs -->
@@ -35,9 +39,10 @@
                     <input type="text" id="report-name" placeholder="Ej: Reporte de Ventas Q2 2023">
                 </div>
                 
-                <div class="form-group">
+                <div class="form-group, filter-group">
                     <label for="report-type">Tipo de Reporte:</label>
                     <select id="report-type">
+                        <option selected>Seleccionar</option>
                         <option value="forecast">Predicción de Ventas</option>
                         <option value="performance">Desempeño del Modelo</option>
                         <option value="comparison">Comparativa de Modelos</option>
@@ -54,12 +59,13 @@
                     </div>
                 </div>
                 
-                <div class="form-group">
+                <div class="form-group, filter-group">
                     <label for="forecast-horizon">Horizonte de Predicción:</label>
                     <select id="forecast-horizon">
+                        <option selected>Seleccionar</option>
                         <option value="30">30 días</option>
                         <option value="60">60 días</option>
-                        <option value="90" selected>90 días</option>
+                        <option value="90">90 días</option>
                         <option value="180">180 días</option>
                     </select>
                 </div>
@@ -73,15 +79,15 @@
                         <h3><i class="fas fa-chart-line"></i> Ventas y Predicciones</h3>
                         <div class="checkbox-list">
                             <label class="checkbox-item">
-                                <input type="checkbox" id="include-historical" checked>
+                                <input type="checkbox" id="include-historical" >
                                 <span>Datos Históricos</span>
                             </label>
                             <label class="checkbox-item">
-                                <input type="checkbox" id="include-forecast" checked>
+                                <input type="checkbox" id="include-forecast" >
                                 <span>Predicciones</span>
                             </label>
                             <label class="checkbox-item">
-                                <input type="checkbox" id="include-confidence" checked>
+                                <input type="checkbox" id="include-confidence" >
                                 <span>Intervalos de Confianza</span>
                             </label>
                         </div>
@@ -91,11 +97,11 @@
                         <h3><i class="fas fa-puzzle-piece"></i> Componentes del Modelo</h3>
                         <div class="checkbox-list">
                             <label class="checkbox-item">
-                                <input type="checkbox" id="include-trend" checked>
+                                <input type="checkbox" id="include-trend" >
                                 <span>Tendencia</span>
                             </label>
                             <label class="checkbox-item">
-                                <input type="checkbox" id="include-seasonality" checked>
+                                <input type="checkbox" id="include-seasonality" >
                                 <span>Estacionalidad</span>
                             </label>
                             <label class="checkbox-item">
@@ -109,19 +115,19 @@
                         <h3><i class="fas fa-tachometer-alt"></i> Métricas del Modelo</h3>
                         <div class="checkbox-list">
                             <label class="checkbox-item">
-                                <input type="checkbox" id="include-rmse" checked>
+                                <input type="checkbox" id="include-rmse" >
                                 <span>RMSE</span>
                             </label>
                             <label class="checkbox-item">
-                                <input type="checkbox" id="include-mae" checked>
+                                <input type="checkbox" id="include-mae" >
                                 <span>MAE</span>
                             </label>
                             <label class="checkbox-item">
-                                <input type="checkbox" id="include-mape" checked>
+                                <input type="checkbox" id="include-mape" >
                                 <span>MAPE</span>
                             </label>
                             <label class="checkbox-item">
-                                <input type="checkbox" id="include-r2" checked>
+                                <input type="checkbox" id="include-r2" >
                                 <span>R²</span>
                             </label>
                         </div>
@@ -161,15 +167,15 @@
                     
                     <div class="additional-options">
                         <label class="checkbox-item">
-                            <input type="checkbox" id="include-charts" checked>
+                            <input type="checkbox" id="include-charts" >
                             <span>Incluir gráficos</span>
                         </label>
                         <label class="checkbox-item">
-                            <input type="checkbox" id="include-summary" checked>
+                            <input type="checkbox" id="include-summary" >
                             <span>Incluir resumen ejecutivo</span>
                         </label>
                         <label class="checkbox-item">
-                            <input type="checkbox" id="include-insights" checked>
+                            <input type="checkbox" id="include-insights" >
                             <span>Incluir insights automáticos</span>
                         </label>
                     </div>
@@ -818,21 +824,121 @@ function resetOptions() {
 }
 
 // Generar reporte final
-function generateReport() {
-    // Verificar que hay un nombre de reporte
+// Generar reporte final
+async function generateReport() {
     const reportName = document.getElementById('report-name').value;
     if (!reportName) {
         alert('Por favor, especifique un nombre para el reporte');
         return;
     }
-    
-    // Obtener formato seleccionado
+
     const format = document.querySelector('input[name="export-format"]:checked').value;
+    const includeCharts = document.getElementById('include-charts').checked;
     
-    // Simular generación de reporte
-    alert(`Generando reporte "${reportName}" en formato ${format.toUpperCase()}. Esta función se completará en la implementación final.`);
+    // Obtener datos visibles en la vista previa
+    const reportData = {
+        name: reportName,
+        type: document.getElementById('report-type').value,
+        content: document.getElementById('report-preview').innerHTML,
+        metrics: getSelectedMetrics(),
+        rawData: dashboardData
+    };
+
+    switch(format) {
+        case 'excel':
+            await generateExcel(reportData, includeCharts);
+            break;
+        case 'pdf':
+            await generatePDF(reportData, includeCharts);
+            break;
+        case 'csv':
+            generateCSV(reportData);
+            break;
+    }
 }
 
+// Helper para obtener métricas seleccionadas
+function getSelectedMetrics() {
+    return {
+        rmse: document.getElementById('include-rmse').checked,
+        mae: document.getElementById('include-mae').checked,
+        mape: document.getElementById('include-mape').checked,
+        r2: document.getElementById('include-r2').checked
+    };
+}
+
+// Generar Excel
+async function generateExcel(reportData, includeCharts) {
+    const wb = XLSX.utils.book_new();
+    
+    // Hoja de métricas
+    if (reportData.metrics) {
+        const metricsSheet = XLSX.utils.json_to_sheet([
+            { Métrica: 'RMSE', Valor: reportData.rawData.model_info?.metrics?.rmse || 'N/A' },
+            { Métrica: 'MAE', Valor: reportData.rawData.model_info?.metrics?.mae || 'N/A' },
+            { Métrica: 'MAPE', Valor: reportData.rawData.model_info?.metrics?.mape ? `${reportData.rawData.model_info.metrics.mape}%` : 'N/A' },
+            { Métrica: 'R²', Valor: reportData.rawData.model_info?.metrics?.r2 || 'N/A' }
+        ]);
+        XLSX.utils.book_append_sheet(wb, metricsSheet, 'Métricas');
+    }
+
+    // Hoja de datos históricos
+    if (reportData.rawData.predictions?.historical) {
+        const historicalData = reportData.rawData.predictions.historical.dates.map((date, index) => ({
+            Fecha: date,
+            Ventas: reportData.rawData.predictions.historical.values[index]
+        }));
+        const historicalSheet = XLSX.utils.json_to_sheet(historicalData);
+        XLSX.utils.book_append_sheet(wb, historicalSheet, 'Histórico');
+    }
+
+    XLSX.writeFile(wb, `${reportData.name}.xlsx`);
+}
+
+// Generar CSV
+function generateCSV(reportData) {
+    let csvContent = "Fecha,Ventas\n";
+    
+    if (reportData.rawData.predictions?.historical) {
+        reportData.rawData.predictions.historical.dates.forEach((date, index) => {
+            csvContent += `${date},${reportData.rawData.predictions.historical.values[index]}\n`;
+        });
+    }
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `${reportData.name}.csv`;
+    link.click();
+}
+
+// Generar PDF
+async function generatePDF(reportData, includeCharts) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const element = document.getElementById('report-preview');
+    
+    // Capturar gráficos como imágenes
+    if (includeCharts) {
+        const canvas = element.querySelector('canvas');
+        const chartImage = await html2canvas(canvas);
+        const imgData = chartImage.toDataURL('image/png');
+        
+        doc.addImage(imgData, 'PNG', 10, 10, 180, 100);
+        doc.text(10, 120, 'Métricas:');
+    }
+
+    // Agregar texto
+    const metricsText = [
+        `RMSE: ${reportData.rawData.model_info?.metrics?.rmse || 'N/A'}`,
+        `MAE: ${reportData.rawData.model_info?.metrics?.mae || 'N/A'}`,
+        `MAPE: ${reportData.rawData.model_info?.metrics?.mape ? `${reportData.rawData.model_info.metrics.mape}%` : 'N/A'}`,
+        `R²: ${reportData.rawData.model_info?.metrics?.r2 || 'N/A'}`
+    ];
+    
+    doc.text(metricsText, 10, 130);
+    doc.save(`${reportData.name}.pdf`);
+}
 // Funciones de utilidad
 
 // Formatear fecha
