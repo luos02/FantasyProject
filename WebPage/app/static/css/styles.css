@@ -8,6 +8,57 @@
     --text-gray: #e0e0e0;
     --shadow-color: rgba(0, 0, 0, 0.1);
 }
+  .button {
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s;
+    font-size: 14px;
+  }
+
+  .button-primary {
+    background: #00796b;
+    color: white;
+  }
+  
+  .button-primary:hover {
+    background: #00695c;
+  }
+  
+  .button-secondary {
+    background: #f0f0f0;
+    color: #333;
+    border: 1px solid #ddd;
+  }
+  
+  .button-secondary:hover {
+    background: #e0e0e0;
+  }
+
+  .filter-group {
+    flex: 1;
+    min-width: 200px;
+  }
+  
+  .filter-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #444;
+  }
+  
+  .filter-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: white;
+  }
 
 /* Estilos generales */
 * {
