@@ -2,17 +2,14 @@ import os
 from app.db_config import get_database_uri
 from dotenv import load_dotenv
 
-# Cargar variables desde el archivo .env
 load_dotenv()
 
 class Config:
-    # Configuración general desde variables de entorno
     SECRET_KEY = os.environ.get('SECRET_KEY', 'fallback_secret_key')
     DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
     
-    # Configuración de la base de datos PostgreSQL
-    # Obtiene la URI de la función en db_config.py
-    SQLALCHEMY_DATABASE_URI = get_database_uri()
+    # Para Render: usar DATABASE_URL si existe, sino usar el método actual
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or get_database_uri()
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 class DevelopmentConfig(Config):
