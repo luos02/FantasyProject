@@ -23,7 +23,7 @@ def login():
             flash('Credenciales inválidas', 'error')
             return redirect(url_for('auth.login'))
     
-    return render_template('login.html')
+    return render_template('Login.html')
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
